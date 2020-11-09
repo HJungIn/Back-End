@@ -12,6 +12,7 @@ id<br/>
 만든&참여 게시글 리스트 participatePosts<br/> 
 만든 게시글 리스트 ownPosts<br/> 
 북마크 리스트 bookmarkPosts<br/> 
+댓글 리스트 myComments<br/>
 <br/> 
 <게시판> Post<br/> 
 id<br/> 
