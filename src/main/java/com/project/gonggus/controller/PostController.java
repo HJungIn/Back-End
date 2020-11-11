@@ -5,6 +5,7 @@ import com.project.gonggus.domain.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -16,15 +17,15 @@ public class PostController {
 
     private final PostService postService;
 
-    @RequestMapping("/post")
-    public String categoryPost(Model model, @RequestParam("category") String category){
+    @RequestMapping("/{category}")
+    public String categoryPost(Model model, @PathVariable("category") String category){
         List<Post> categoryPosts = postService.getCategoryPosts(category);
         model.addAttribute("categoryPosts",categoryPosts);
         return "categorypost";
     }
 
 
-    @RequestMapping("/search")
+    @RequestMapping("/searchpost")
     public String searchPost(Model model, @RequestParam("search") String searchTitle){
         List<Post> searchPosts = postService.getSearchPosts(searchTitle);
         model.addAttribute("searchPosts",searchPosts);
