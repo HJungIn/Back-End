@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -31,6 +32,8 @@ public class Post extends BaseTimeEntity {
 
     private Long limitNumberOfPeople;
 
+    private Date deadline;
+
     private boolean finishCheck;
 
     @ManyToOne
@@ -44,13 +47,14 @@ public class Post extends BaseTimeEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Post(User owner, String title, String content, String category, String goodsLink, Long limitNumberOfPeople, boolean finishCheck){
+    public Post(User owner, String title, String content, String category, String goodsLink, Long limitNumberOfPeople, Date deadline,boolean finishCheck){
         this.owner = owner;
         this.title = title;
         this.category = category;
         this.content = content;
         this.goodsLink = goodsLink;
         this.limitNumberOfPeople = limitNumberOfPeople;
+        this.deadline = deadline;
         this.finishCheck = finishCheck;
         this.setOwner(owner);
     }
