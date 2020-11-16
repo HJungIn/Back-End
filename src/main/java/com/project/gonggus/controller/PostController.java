@@ -64,12 +64,12 @@ public class PostController {
     }
 
     @RequestMapping("/updatepostsubmit/{postId}")
-    public String updatePost(@PathVariable("postId") Long postId,
+    public String updatePostSubmit(@PathVariable("postId") Long postId,
                              @RequestParam("title") String title,
                              @RequestParam("content") String content,
                              @RequestParam("category") String category,
                              @RequestParam("goodsLink") String goodsLink,
-                             @RequestParam("limitNumberOfPeople") String limitNumberOfPeople,
+                             @RequestParam("limitNumberOfPeople") Long limitNumberOfPeople,
                              @RequestParam("deadline") String deadline){
 
 //        User user = (User)httpSession.getAttribute("user"); //현재 로그인중인 user
