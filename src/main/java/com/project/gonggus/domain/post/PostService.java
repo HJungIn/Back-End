@@ -1,6 +1,5 @@
 package com.project.gonggus.domain.post;
 
-import javafx.geometry.Pos;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
