@@ -50,7 +50,7 @@ public class PostService {
         }
     }
 
-    public void updatePost(Long postId, String title, String content, String category, String goodsLink, String limitNumberOfPeople, String deadline) {
+    public void updatePost(Long postId, String title, String content, String category, String goodsLink, Long limitNumberOfPeople, String deadline) {
         try {
 
             Post post = postRepository.findById(postId).get();
@@ -59,7 +59,7 @@ public class PostService {
             post.setContent(content);
             post.setCategory(category);
             post.setGoodsLink(goodsLink);
-            post.setLimitNumberOfPeople(Long.valueOf(limitNumberOfPeople));
+            post.setLimitNumberOfPeople(limitNumberOfPeople);
             if(!deadline.equals("")) {
                 SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
                 Date deadline_date = fm.parse(deadline);
