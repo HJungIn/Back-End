@@ -3,6 +3,7 @@ package com.project.gonggus.domain.user;
 import com.project.gonggus.domain.comment.Comment;
 import com.project.gonggus.domain.userpost.UserPost;
 import com.project.gonggus.domain.post.Post;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,6 +32,16 @@ public class User {
     private String nickname;
 
     private String schoolName;
+
+    @Builder
+    public User(String name, String userId, String userPassword, String nickname, String schoolName){
+        this.name=name;
+        this.userId=userId;
+        this.userPassword=userPassword;
+        this.nickname =nickname;
+        this.schoolName=schoolName;
+    }
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<UserPost> participatePosts = new ArrayList<>();
