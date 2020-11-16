@@ -44,3 +44,15 @@ post<br/>
 메인 페이지, 카테고리별 게시글리스트, 게시글 검색, 게시글 작성하기, 수정하기, 상세 게시글 <br/> 
 참여하기 후 게시글(댓글나오도록 하기) <br/> 
 <br/> 
+
+<hr>
+<h3>path 경로 설정</h3>
+<p>
+메인 페이지 :  / <br/> 
+카테고리별 게시글리스트 :  /{category} <br/> 
+게시글 검색 :  /searchpost?search=검색어 <br/> 
+게시글 작성하기 :  /makepost  ,  완료후  :  /makepostsubmit <br/> 
+게시글 수정하기 :  /post/{postId}/update  ,  완료후  :  /updatepostsubmit/{postId} <br/> 
+상세 게시글 (참여하기 후 게시글(댓글나오도록 하기)) :  /post/{postId} <br/> 
+</p>
+<br/>
