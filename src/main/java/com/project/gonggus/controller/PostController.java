@@ -48,7 +48,7 @@ public class PostController {
 
     @GetMapping("/post/{postId}/update")
     public Post updatePost(@PathVariable("postId") Long postId){
-        return postService.getPost(postId).get();
+        return postService.getPost(postId);
     }
 
     @PutMapping("/updatepostsubmit/{postId}")
@@ -67,7 +67,7 @@ public class PostController {
     //1.이 페이지에 댓글하고 다 보일건데.. 로그인 한 user가 참여했으면 보이고 참여안했으면 안보임
     @GetMapping("/post/{postId}")
     public Post detailPost(@PathVariable("postId") Long postId){
-        return postService.getPost(postId).get();
+        return postService.getPost(postId);
     }
 
 

@@ -33,7 +33,7 @@ public class PostService {
         return postRepository.findBySearchTitle(searchTitle);
     }
 
-    public Optional<Post> getPost(Long postid) { return postRepository.findById(postid); }
+    public Post getPost(Long postid) { return postRepository.findById(postid).orElse(null); }
 
     public void savePost(String userId, String title, String content, String category, String goodsLink, Long limitNumberOfPeople, String deadline) {
         try {
