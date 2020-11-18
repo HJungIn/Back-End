@@ -41,7 +41,7 @@ public class PostService {
 
             SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
             Date deadline_date = fm.parse(deadline);
-            Post post = new Post(user, title, content, category, goodsLink, limitNumberOfPeople, deadline_date, false);
+            Post post = new Post(user, title, content, category, goodsLink, Long.valueOf(1),limitNumberOfPeople, deadline_date, false);
             postRepository.save(post);
             userPostService.saveUserPost(new UserPost(user, post));
 
