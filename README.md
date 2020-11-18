@@ -23,6 +23,7 @@ id<br/>
 생성날짜 createdDate<br/> 
 링크 goodsLink<br/> 
 기한 deadline<br/> 
+현재인원 currentNumberOfPeople<br/> 
 제한인원 limitNumberOfPeople<br/> 
 참여중인 사용자 participateUsers<br/> 
 마감 여부 finishCheck<br/> 
