@@ -37,7 +37,7 @@ public class Post extends BaseTimeEntity {
 
     private Date deadline;
 
-    private boolean finishCheck;
+    private Boolean finishCheck;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
