@@ -11,7 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -21,19 +22,20 @@ public class PostService {
     private final UserPostService userPostService;
     private final PostRepository postRepository;
 
-    public void savePost(Post post){
-        postRepository.save(post);
+    public List<PostDto> getCategoryPosts(String category) {
+        List<Post> postList = postRepository.findByCategory(category);
+        return postList.stream().map(PostDto::convert).collect(Collectors.toList());
     }
 
-    public List<Post> getCategoryPosts(String category) {
-        return postRepository.findByCategory(category);
+    public List<PostDto> getSearchPosts(String searchTitle) {
+        List<Post> postList = postRepository.findBySearchTitle(searchTitle);
+        return postList.stream().map(PostDto::convert).collect(Collectors.toList());
     }
 
-    public List<Post> getSearchPosts(String searchTitle) {
-        return postRepository.findBySearchTitle(searchTitle);
+    public PostDto getPost(Long postid) {
+        Post post = postRepository.findById(postid).orElse(null);
+        return post != null ? PostDto.convert(post) : null;
     }
-
-    public Post getPost(Long postid) { return postRepository.findById(postid).orElse(null); }
 
     public void savePost(String userId, String title, String content, String category, String goodsLink, Long limitNumberOfPeople, String deadline) {
         try {

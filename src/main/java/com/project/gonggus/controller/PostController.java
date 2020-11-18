@@ -1,6 +1,6 @@
 package com.project.gonggus.controller;
 
-import com.project.gonggus.domain.post.Post;
+import com.project.gonggus.domain.post.PostDto;
 import com.project.gonggus.domain.post.PostService;
 import com.project.gonggus.domain.user.User;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +17,12 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/{category}")
-    public List<Post> categoryPost(@PathVariable("category") String category){
+    public List<PostDto> categoryPost(@PathVariable("category") String category){
         return postService.getCategoryPosts(category);
     }
 
     @GetMapping("/searchpost")
-    public List<Post> searchPost(@RequestParam("search") String searchTitle){
+    public List<PostDto> searchPost(@RequestParam("search") String searchTitle){
         return postService.getSearchPosts(searchTitle);
     }
 
@@ -47,7 +47,7 @@ public class PostController {
     }
 
     @GetMapping("/post/{postId}/update")
-    public Post updatePost(@PathVariable("postId") Long postId){
+    public PostDto updatePost(@PathVariable("postId") Long postId){
         return postService.getPost(postId);
     }
 
@@ -66,7 +66,7 @@ public class PostController {
 
     //1.이 페이지에 댓글하고 다 보일건데.. 로그인 한 user가 참여했으면 보이고 참여안했으면 안보임
     @GetMapping("/post/{postId}")
-    public Post detailPost(@PathVariable("postId") Long postId){
+    public PostDto detailPost(@PathVariable("postId") Long postId){
         return postService.getPost(postId);
     }
 
