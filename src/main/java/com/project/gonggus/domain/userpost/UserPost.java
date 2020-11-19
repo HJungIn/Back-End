@@ -35,7 +35,7 @@ public class UserPost {
 
     public void setUser(User user){
         this.user =user;
-        user.getParticipatePosts().add(this);
+//        user.getParticipatePosts().add(this);
     }
     public void setPost(Post post){
         this.post = post;

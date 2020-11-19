@@ -2,6 +2,14 @@ plugins {
 	id 'org.springframework.boot' version '2.3.5.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 	id 'java'
+	id 'org.siouan.frontend-jdk8' version '4.0.1'
+}
+
+frontend {
+	nodeVersion = '14.15.0'
+	assembleScript = 'run build'
+	yarnEnabled = true
+	yarnVersion = '1.22.5'
 }
 
 group = 'com.project'
@@ -20,7 +28,11 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.7.0'
+//	compile "org.springframework.boot:spring-boot-starter-security"
+//	compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity5"
+    compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {

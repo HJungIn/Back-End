@@ -4,21 +4,20 @@ import com.project.gonggus.domain.BaseTimeEntity;
 import com.project.gonggus.domain.userpost.UserPost;
 import com.project.gonggus.domain.comment.Comment;
 import com.project.gonggus.domain.user.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Entity
+@Data
 @Getter
-@NoArgsConstructor
+@Entity
+@RequiredArgsConstructor
 public class Post extends BaseTimeEntity {
-
     @Id
+    @Column(name = "POST_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -59,8 +58,8 @@ public class Post extends BaseTimeEntity {
         this.setOwner(owner);
     }
 
-    public void  setOwner(User owner){
+    public void setOwner(User owner){
         this.owner = owner;
-        owner.getOwnPosts().add(this);
+//        owner.getOwnPosts().add(this);
     }
 }

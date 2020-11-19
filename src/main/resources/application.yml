@@ -1,3 +1,15 @@
 spring:
   profiles:
     active: dev
+  datasource:
+    url: jdbc:mysql://localhost:3307/gonggusdb?serverTimezone=Asia/Seoul
+    username: root
+    password: plumgum0103
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    rest:
+      base-path: /api
+
+jwt:
+  expmin: 5
+  salt: FE658C89D505800FC245C76AE8F0E3AACBE51191841E76A63011D1FE5AE5A3D7

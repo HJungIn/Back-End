@@ -38,7 +38,7 @@ public class Comment {
 
     public void  setWriter(User writer){
         this.writer = writer;
-        writer.getMyComments().add(this);
+//        writer.getMyComments().add(this);
     }
 
     public void setPost(Post post){

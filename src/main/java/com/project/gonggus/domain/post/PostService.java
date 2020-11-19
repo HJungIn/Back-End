@@ -1,6 +1,5 @@
 package com.project.gonggus.domain.post;
 
-import javafx.geometry.Pos;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +8,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PostService {
-    private final PostRepository postRepository;
+    private PostRepository postRepository;
     public void savePost(Post post){postRepository.save(post);}
 
     public List<Post> getCategoryPosts(String category) {
