@@ -32,8 +32,8 @@ public class PostService {
         return postList.stream().map(PostDto::convert).collect(Collectors.toList());
     }
 
-    public PostDto getPost(Long postid) {
-        Post post = postRepository.findById(postid).orElse(null);
+    public PostDto getPostDto(Long postId) {
+        Post post = postRepository.findById(postId).orElse(null);
         return post != null ? PostDto.convert(post) : null;
     }
 
@@ -73,4 +73,6 @@ public class PostService {
         }
 
     }
+
+    public Post getPost(Long postId){ return postRepository.findById(postId).orElse(null);}
 }
