@@ -37,13 +37,13 @@ public class PostService {
         return post != null ? PostDto.convert(post) : null;
     }
 
-    public void savePost(String userId, String title, String content, String category, String goodsLink, Long limitNumberOfPeople, String deadline) {
+    public void savePost(String userId, String title, String content, String category, String goodsLink, String limitNumberOfPeople, String deadline) {
         try {
             User user = userService.getUser(userId);
 
             SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
             Date deadline_date = fm.parse(deadline);
-            Post post = new Post(user, title, content, category, goodsLink, Long.valueOf(1),limitNumberOfPeople, deadline_date, false);
+            Post post = new Post(user, title, content, category, goodsLink, Long.valueOf(1),Long.valueOf(limitNumberOfPeople), deadline_date, false);
             postRepository.save(post);
             userPostService.saveUserPost(new UserPost(user, post));
 
@@ -52,7 +52,7 @@ public class PostService {
         }
     }
 
-    public void updatePost(Long postId, String title, String content, String category, String goodsLink, Long limitNumberOfPeople, String deadline) {
+    public void updatePost(Long postId, String title, String content, String category, String goodsLink, String limitNumberOfPeople, String deadline) {
         try {
 
             Post post = postRepository.findById(postId).get();
@@ -61,7 +61,7 @@ public class PostService {
             post.setContent(content);
             post.setCategory(category);
             post.setGoodsLink(goodsLink);
-            post.setLimitNumberOfPeople(limitNumberOfPeople);
+            post.setLimitNumberOfPeople(Long.valueOf(limitNumberOfPeople));
             if(!deadline.equals("")) {
                 SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
                 Date deadline_date = fm.parse(deadline);

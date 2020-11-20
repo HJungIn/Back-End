@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -35,15 +36,10 @@ public class PostController {
     }
 
     @PostMapping("/makepostsubmit")
-    public void makePostSubmit(@RequestParam("title") String title,
-                                 @RequestParam("content") String content,
-                                 @RequestParam("category") String category,
-                                 @RequestParam("goodsLink") String goodsLink,
-                                 @RequestParam("limitNumberOfPeople") Long limitNumberOfPeople,
-                                 @RequestParam("deadline") String deadline){
+    public void makePostSubmit(@RequestBody Map<String, String> param){
 
 //        ("user"); //현재 로그인중 user 정보가져오기
-        postService.savePost(user.getUserId(), title, content, category, goodsLink, limitNumberOfPeople, deadline);
+        postService.savePost(user.getUserId(), param.get("title"), param.get("content"), param.get("category"),param.get("goodsLink"),param.get("limitNumberOfPeople"),param.get("deadline"));
     }
 
     @GetMapping("/post/{postId}/update")
@@ -53,15 +49,10 @@ public class PostController {
 
     @PutMapping("/updatepostsubmit/{postId}")
     public void updatePostSubmit(@PathVariable("postId") Long postId,
-                             @RequestParam("title") String title,
-                             @RequestParam("content") String content,
-                             @RequestParam("category") String category,
-                             @RequestParam("goodsLink") String goodsLink,
-                             @RequestParam("limitNumberOfPeople") Long limitNumberOfPeople,
-                             @RequestParam("deadline") String deadline){
+                                 @RequestBody Map<String, String> param){
 
 //        ("user"); //현재 로그인중인 user
-        postService.updatePost(postId, title,content,category,goodsLink,limitNumberOfPeople,deadline);
+        postService.updatePost(postId, param.get("title"), param.get("content"), param.get("category"),param.get("goodsLink"),param.get("limitNumberOfPeople"),param.get("deadline"));
     }
 
     //1.이 페이지에 댓글하고 다 보일건데.. 로그인 한 user가 참여했으면 보이고 참여안했으면 안보임
