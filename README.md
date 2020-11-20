@@ -42,8 +42,8 @@ post<br/>
 <br/> 
 <h4>역할분담</h4>
 (로그인,)회원가입, 마이페이지<br/> 
-메인 페이지, 카테고리별 게시글리스트, 게시글 검색, 게시글 작성하기, 게시글 수정하기<br>
-상세 게시글( 참여하기 후 게시글(댓글나오도록 하기) ), 북마크 게시글, 참여한 게시글, 본인이 만든 게시글<br/> 
+메인 페이지, 카테고리별 게시글리스트, 게시글 검색, 게시글 작성하기, 게시글 수정하기, 상세 게시글( 참여하기 후 게시글(댓글나오도록 하기) )<br>
+북마크 게시글, 참여한 게시글&본인이 만든 게시글 보기, 북마크 눌렀을때, 참여하기 눌렀을때<br/> 
 <br>
 <br/> 
 
@@ -101,5 +101,29 @@ post<br/>
 * 상세 게시글 (참여하기 후 게시글(댓글나오도록 하기)) : /post/{postId}<br>
   -- 백엔드가 받는 데이터 : postId (Long)<br>
   -- 프론트에게 주는 데이터 : post (Post)<br>
+  <br>
+  <br>
+  == 댓글 ==<br>
+* 댓글 쓰기 : /post/{postId}/writecommentsubmit<br>
+ - 백엔드가 받는 데이터 : postId (Long),<br>
+		       content (String)<br>
+<br>
+* 댓글 수정하기 : /post/{postId}/updatecomment/{commentId}<br>
+ - 백엔드가 받는 데이터 : postId (Long),<br>
+		       commentId (Long)<br>
+ - 프론트에게 주는 데이터 : comment (Comment)<br>
+<br>
+* 댓글 수정하기 완료후 : /post/{postId}/updatecommentsubmit/{commentId}<br>
+ - 백엔드가 받는 데이터 : postId (Long),<br>
+		       commentId (Long),<br>
+		       content (String)<br>
+* 댓글 삭제하기 : /post/{postId}/deletecomment/{commentId}<br>
+ - 백엔드가 받는 데이터 : postId (Long),<br>
+		       commentId (Long)<br>
+<br>
+  
+  
+  
+  
 </pre>
 <br>
