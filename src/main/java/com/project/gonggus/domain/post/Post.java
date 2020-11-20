@@ -7,6 +7,7 @@ import com.project.gonggus.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 public class Post extends BaseTimeEntity {
 
@@ -30,11 +31,13 @@ public class Post extends BaseTimeEntity {
 
     private String goodsLink;
 
+    private Long currentNumberOfPeople;
+
     private Long limitNumberOfPeople;
 
     private Date deadline;
 
-    private boolean finishCheck;
+    private Boolean finishCheck;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
@@ -47,12 +50,13 @@ public class Post extends BaseTimeEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Post(User owner, String title, String content, String category, String goodsLink, Long limitNumberOfPeople, Date deadline,boolean finishCheck){
+    public Post(User owner, String title, String content, String category, String goodsLink, Long currentNumberOfPeople,Long limitNumberOfPeople, Date deadline,boolean finishCheck){
         this.owner = owner;
         this.title = title;
         this.category = category;
         this.content = content;
         this.goodsLink = goodsLink;
+        this.currentNumberOfPeople = currentNumberOfPeople;
         this.limitNumberOfPeople = limitNumberOfPeople;
         this.deadline = deadline;
         this.finishCheck = finishCheck;
