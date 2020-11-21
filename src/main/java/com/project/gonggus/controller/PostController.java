@@ -62,11 +62,30 @@ public class PostController {
     }
 
 
-    @PutMapping("/post/{postId}/bookmarkregister")
-    public void bookmarkRegister(@PathVariable("postId") Long postId){
+    @PutMapping("/post/{postId}/registerbookmark")
+    public void registerBookmark(@PathVariable("postId") Long postId){
 //        ("user"); //현재 로그인중인 user
-        postService.updateBookmarkRegister(user.getUserId(), postId);
+        postService.registerBookmark(user.getUserId(), postId);
     }
+
+    @DeleteMapping("/post/{postId}/deletebookmark")
+    public void deleteBookmark(@PathVariable("postId") Long postId){
+//        ("user"); //현재 로그인중인 user
+        postService.deleteBookmark(user.getUserId(), postId);
+    }
+
+    @PostMapping("/post/{postId}/participatepost")
+    public void participatePost(@PathVariable("postId") Long postId){
+//        ("user"); //현재 로그인중인 user
+        postService.participatePost(user.getUserId(), postId);
+    }
+
+    @DeleteMapping("/post/{postId}/withdrawpost")
+    public void withdrawPost(@PathVariable("postId") Long postId){
+//        ("user"); //현재 로그인중인 user
+        postService.withdrawPost(user.getUserId(), postId);
+    }
+
 
 
 
