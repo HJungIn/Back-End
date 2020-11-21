@@ -62,5 +62,12 @@ public class PostController {
     }
 
 
+    @PutMapping("/post/{postId}/bookmarkregister")
+    public void bookmarkRegister(@PathVariable("postId") Long postId){
+//        ("user"); //현재 로그인중인 user
+        postService.updateBookmarkRegister(user.getUserId(), postId);
+    }
+
+
 
 }

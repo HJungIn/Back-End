@@ -75,4 +75,9 @@ public class PostService {
     }
 
     public Post getPost(Long postId){ return postRepository.findById(postId).orElse(null);}
+
+    public void updateBookmarkRegister(String userId, Long postId) {
+        User user = userService.getUser(userId);
+        user.getBookmarkPosts().add(postId);
+    }
 }
