@@ -62,5 +62,31 @@ public class PostController {
     }
 
 
+    @PostMapping("/post/{postId}/registerbookmark")
+    public void registerBookmark(@PathVariable("postId") Long postId){
+//        ("user"); //현재 로그인중인 user
+        postService.registerBookmark(user.getUserId(), postId);
+    }
+
+    @DeleteMapping("/post/{postId}/deletebookmark")
+    public void deleteBookmark(@PathVariable("postId") Long postId){
+//        ("user"); //현재 로그인중인 user
+        postService.deleteBookmark(user.getUserId(), postId);
+    }
+
+    @PostMapping("/post/{postId}/participatepost")
+    public void participatePost(@PathVariable("postId") Long postId){
+//        ("user"); //현재 로그인중인 user
+        postService.participatePost(user.getUserId(), postId);
+    }
+
+    @DeleteMapping("/post/{postId}/withdrawpost")
+    public void withdrawPost(@PathVariable("postId") Long postId){
+//        ("user"); //현재 로그인중인 user
+        postService.withdrawPost(user.getUserId(), postId);
+    }
+
+    public User user2 = new User("na2","ia2","pa2","",""); //임시용
+
 
 }

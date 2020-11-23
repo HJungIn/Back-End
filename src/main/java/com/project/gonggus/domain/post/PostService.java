@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -76,4 +77,48 @@ public class PostService {
     }
 
     public Post getPost(Long postId){ return postRepository.findById(postId).orElse(null);}
+
+    public void registerBookmark(String userId, Long postId) {
+        User user = userService.getUser(userId);
+        ArrayList<Long> list = user.getBookmarkPosts();
+        if(list==null){
+            list = new ArrayList<>();
+        }
+        if(list.contains(postId)) return;
+        list.add(postId);
+        user.setBookmarkPosts(list);
+    }
+
+    public void deleteBookmark(String userId, Long postId) {
+        User user = userService.getUser(userId);
+        user.getBookmarkPosts().remove(new Long(postId));
+    }
+
+    public void participatePost(String userId, Long postId) {
+        User user = userService.getUser(userId);
+        Post post = postRepository.findById(postId).orElse(null);
+        if(user==null || post==null) return;
+
+        UserPost userPost = new UserPost(user, post);
+        userPostService.saveUserPost(userPost);
+        post.setCurrentNumberOfPeople(post.getCurrentNumberOfPeople()+1);
+    }
+
+    public void withdrawPost(String userId, Long postId) {
+        User user = userService.getUser(userId);
+        Post post = postRepository.findById(postId).orElse(null);
+        if(user==null || post==null) return;
+
+        if(user == post.getOwner()){
+            if(post.getCurrentNumberOfPeople()!=1)
+                return;
+            postRepository.delete(post);
+            return;
+        }
+
+        UserPost userPost = userPostService.getUserPost(user, post);
+        userPostService.deleteUserPost(userPost);
+        post.setCurrentNumberOfPeople(post.getCurrentNumberOfPeople()-1);
+
+    }
 }
