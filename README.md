@@ -121,8 +121,7 @@ post<br/>
  - 백엔드가 받는 데이터 : postId (Long),<br>
 		       commentId (Long)<br>
 <br>
-  
-  ===북마크 & 참여하기 +둘 다 삭제하기===<br>
+===북마크 & 참여하기 +둘 다 삭제하기===<br>
 * 북마크 등록하기 : /post/{postId}/registerbookmark<br>
  - 백엔드가 받는 데이터 : postId (Long)<br>
 <br>
