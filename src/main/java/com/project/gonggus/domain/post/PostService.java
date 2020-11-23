@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,7 +79,13 @@ public class PostService {
 
     public void registerBookmark(String userId, Long postId) {
         User user = userService.getUser(userId);
-        user.getBookmarkPosts().add(postId);
+        ArrayList<Long> list = user.getBookmarkPosts();
+        if(list==null){
+            list = new ArrayList<>();
+        }
+        if(list.contains(postId)) return;
+        list.add(postId);
+        user.setBookmarkPosts(list);
     }
 
     public void deleteBookmark(String userId, Long postId) {
@@ -104,7 +111,7 @@ public class PostService {
         if(user == post.getOwner()){
             if(post.getCurrentNumberOfPeople()!=1)
                 return;
-            postRepository.delete(post); //참여한 사람들, 댓글들, 유저들의 기억에서 지워지는지. own에서 지워지는지 확인
+            postRepository.delete(post);
             return;
         }
 

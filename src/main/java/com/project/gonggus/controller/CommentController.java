@@ -33,7 +33,6 @@ public class CommentController {
                                     @PathVariable("commentId") Long commentId,
                                     @RequestParam("content") String content){
         //        ("user"); //현재 로그인중인 user
-        System.out.println(content);
         commentService.updateComment(user.getUserId(), postId, commentId, content);
     }
 

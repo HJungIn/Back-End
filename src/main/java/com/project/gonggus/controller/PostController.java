@@ -62,7 +62,7 @@ public class PostController {
     }
 
 
-    @PutMapping("/post/{postId}/registerbookmark")
+    @PostMapping("/post/{postId}/registerbookmark")
     public void registerBookmark(@PathVariable("postId") Long postId){
 //        ("user"); //현재 로그인중인 user
         postService.registerBookmark(user.getUserId(), postId);
@@ -86,7 +86,7 @@ public class PostController {
         postService.withdrawPost(user.getUserId(), postId);
     }
 
-
+    public User user2 = new User("na2","ia2","pa2","",""); //임시용
 
 
 }

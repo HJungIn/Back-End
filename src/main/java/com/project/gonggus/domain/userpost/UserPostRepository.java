@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface UserPostRepository extends JpaRepository<UserPost, Long> {
 
-    @Query("select up from UserPost up where up.user=:user and up.post=post")
+    @Query("select up from UserPost up where up.user=:user and up.post=:post")
     UserPost findByUserAndPost(@Param("user") User user, @Param("post") Post post);
+
+
 }
