@@ -12,13 +12,15 @@ import java.util.List;
 @Data
 @Entity
 @Getter
+@Setter
 public class User {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
-    private @Column(nullable = false) String name;
-    private @Column(nullable = false) String userId;
-    private @Column(nullable = false) String userPassword;
+    private String name;
+    private String userId;
+    private String userPassword;
     private String nickname;
     private String schoolName;
+    private String bookmarkPosts;
 
     public User() { }
 

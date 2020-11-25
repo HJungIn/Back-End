@@ -13,6 +13,15 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) throws Exception {
-        return true;
+        if (req.getMethod().equals("OPTION")) {
+            return true;
+        }
+
+        String token = req.getHeader("jwt_auth_token");
+        if (token != null && token.length() > 0) {
+            return true;
+        } else {
+            throw new RuntimeException();
+        }
     }
 }

@@ -48,23 +48,23 @@ public class UserService {
     }
 
     public User login (String id, String password) {
-        // 입력된 아이디, 비밀번호 길이 검사
-        if(id.length() <= 0 || password.length() <= 0) {
-            return null;
-        }
+//        // 입력된 아이디, 비밀번호 길이 검사
+//        if(id.length() <= 0 || password.length() <= 0) {
+//            return null;
+//        }
 
         // 유저 데이터 요청, 존재하지 않을 시 false 반환
         User user = userRepository.findByUserId(id);
-        if(user == null) {
-            return null;
-        }
+//        if(user == null) {
+//            return null;
+//        }
 
         // 유저 비밀번호 대조하고 불일치하면 false 반환
         String inputPassword = encryptString(password);
         String userPassword = user.getUserPassword();
-        if(!compareString(inputPassword, userPassword)) {
-            return null;
-        }
+//        if(!compareString(inputPassword, userPassword)) {
+//            return null;
+//        }
 
         return user;
     }
