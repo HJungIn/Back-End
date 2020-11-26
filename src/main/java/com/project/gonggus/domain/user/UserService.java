@@ -13,6 +13,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    // 비밀번호 SHA-256으로 암호화
     private String encryptString (String input){
         try {
             MessageDigest sha = MessageDigest.getInstance("SHA-256");
@@ -33,39 +34,56 @@ public class UserService {
         return a.equals(b);
     }
 
+    // 회원가입
     public Boolean register (User user) {
-        String password = user.getUserPassword();
-        if (password == null) {
+        String id = user.getUserId();
+        String password = null, encryptedPassword = null;
+        if (userRepository.findByUserId(id) != null) {
             return false;
         }
-        String encryptedPassword = encryptString(password);
-        if (encryptedPassword == null) {
+        // 비밀번호 암호화 후 파라미터로 받아온 유저 객체에 저장
+        try {
+            password = user.getUserPassword();
+            encryptedPassword = encryptString(password);
+            user.setUserPassword(encryptedPassword);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
             return false;
         }
-        user.setUserPassword(encryptedPassword);
+
+        // 리포지토리를 통하여 데이터베이스에 저장
         userRepository.save(user);
         return true;
     }
 
+    // 로그인
     public User login (String id, String password) {
-//        // 입력된 아이디, 비밀번호 길이 검사
-//        if(id.length() <= 0 || password.length() <= 0) {
-//            return null;
-//        }
+        // 입력된 아이디, 비밀번호 길이 검사
+        if(id.length() <= 0 || password.length() <= 0) {
+            return null;
+        }
 
-        // 유저 데이터 요청, 존재하지 않을 시 false 반환
-        User user = userRepository.findByUserId(id);
-//        if(user == null) {
-//            return null;
-//        }
+        // 유저 데이터 요청
+        User user = null;
+        String inputPassword = null, userPassword = null;
+        try {
+            user = userRepository.findByUserId(id);
+            inputPassword = encryptString(password);
+            userPassword = user.getUserPassword();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return null;
+        }
 
-        // 유저 비밀번호 대조하고 불일치하면 false 반환
-        String inputPassword = encryptString(password);
-        String userPassword = user.getUserPassword();
-//        if(!compareString(inputPassword, userPassword)) {
-//            return null;
-//        }
+        // 사용자 입력 비밀번호 인코딩 후 비밀번호 대조
+        if(!compareString(inputPassword, userPassword)) {
+            return null;
+        }
 
         return user;
+    }
+
+    public User getUser(String userId) {
+        return userRepository.findByUserId(userId);
     }
 }

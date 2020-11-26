@@ -17,7 +17,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        String token = req.getHeader("jwt_auth_token");
+        String token = req.getHeader("auth_token");
         if (token != null && token.length() > 0) {
             return true;
         } else {

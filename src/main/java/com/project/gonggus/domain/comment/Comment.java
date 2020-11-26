@@ -5,11 +5,12 @@ import com.project.gonggus.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 public class Comment {
 
@@ -38,7 +39,7 @@ public class Comment {
 
     public void  setWriter(User writer){
         this.writer = writer;
-//        writer.getMyComments().add(this);
+        writer.getMyComments().add(this);
     }
 
     public void setPost(Post post){
