@@ -1,9 +1,11 @@
 package com.project.gonggus.domain.post;
 
 import com.project.gonggus.domain.BaseTimeEntity;
+
 import com.project.gonggus.domain.userpost.UserPost;
 import com.project.gonggus.domain.comment.Comment;
 import com.project.gonggus.domain.user.User;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
