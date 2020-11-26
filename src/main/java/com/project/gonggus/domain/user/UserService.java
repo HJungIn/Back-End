@@ -86,4 +86,9 @@ public class UserService {
     public User getUser(String userId) {
         return userRepository.findByUserId(userId);
     }
+
+    public UserDto getUserDto(String userId) {
+        User user = userRepository.findByUserId(userId);
+        return UserDto.convert(user);
+    }
 }

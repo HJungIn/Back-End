@@ -2,14 +2,18 @@ package com.project.gonggus.controller;
 
 import com.project.gonggus.domain.user.JwtService;
 import com.project.gonggus.domain.user.User;
+import com.project.gonggus.domain.user.UserDto;
 import com.project.gonggus.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -38,8 +42,10 @@ public class UserContoller {
         try {
             // UserService.login()을 통하여 유저 정보를 받아와 토큰 생성
             User user = userService.login(userId, userPassword);
+            UserDto userData = UserDto.convert(user);
             String token = jwtService.create(user);
             resultMap.put("token", token);
+            resultMap.put("userData", userData);
             // 생성된 토큰을 Cookie에 저장하고 HttpOnly 설정
             Cookie cookie = new Cookie("auth_token", token);
             cookie.setHttpOnly(true);
@@ -81,13 +87,18 @@ public class UserContoller {
     }
 
     @PostMapping("/checklogin")
-    public ResponseEntity<Map<String, Object>> checkLoginExec(@RequestBody Map<String, Object> body){
+    public ResponseEntity<Map<String, Object>> checkLoginExec(@RequestHeader HttpHeaders header){
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
             // 검증을 통하여 JWT 토큰의 payload 부분을 받아옴
-            String token = body.get("auth_token").toString();
-            resultMap = jwtService.get(token);
+            String token = header.get("cookie").toString()
+                    .substring(12, header.get("cookie").toString().length()-1);
+            String userId = jwtService.get(token).get("userid").toString();
+            User currentUser = userService.getUser(userId);
+            UserDto currentUserData = UserDto.convert(currentUser);
+            resultMap.put("token", token);
+            resultMap.put("userData", currentUserData);
             status = HttpStatus.ACCEPTED;
         } catch (RuntimeException e) {
             resultMap.put("message", e.getMessage());
