@@ -2,14 +2,6 @@ plugins {
 	id 'org.springframework.boot' version '2.3.5.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 	id 'java'
-	id 'org.siouan.frontend-jdk8' version '4.0.1'
-}
-
-frontend {
-	nodeVersion = '14.15.0'
-	assembleScript = 'run build'
-	yarnEnabled = true
-	yarnVersion = '1.22.5'
 }
 
 group = 'com.project'
