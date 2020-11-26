@@ -1,6 +1,7 @@
 package com.project.gonggus.domain.user;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -85,6 +86,7 @@ public class UserService {
 
     public User getUser(String userId) {
         return userRepository.findByUserId(userId);
+
     }
 
     public UserDto getUserDto(String userId) {

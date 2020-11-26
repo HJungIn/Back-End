@@ -1,8 +1,10 @@
 package com.project.gonggus.domain.user;
 
 import com.project.gonggus.domain.comment.Comment;
-import com.project.gonggus.domain.post.Post;
+
 import com.project.gonggus.domain.userpost.UserPost;
+import com.project.gonggus.domain.post.Post;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

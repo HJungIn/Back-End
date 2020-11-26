@@ -4,6 +4,7 @@ import com.project.gonggus.domain.post.PostDto;
 import com.project.gonggus.domain.post.PostService;
 import com.project.gonggus.domain.user.User;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
