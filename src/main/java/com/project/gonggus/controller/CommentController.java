@@ -6,6 +6,8 @@ import com.project.gonggus.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
@@ -15,10 +17,11 @@ public class CommentController {
     public User user = new User("na","ia","pa","",""); //임시용
     @PostMapping("/post/{postId}/writecommentsubmit")
     public void writeCommentSubmit(@PathVariable("postId") Long postId,
-                             @RequestParam("content") String content){
+                                   @RequestBody Map<String, String> param){
+//                             @RequestParam("content") String content){
 
-        //        ("user"); //현재 로그인중인 user
-        commentService.saveComment(user.getUserId(), postId, content);
+        //        ("user"); //현재 로그인중인 user 와 writer이 동일한지 확인
+        commentService.saveComment(user.getUserId(), postId, param.get("content"));
     }
 
     @GetMapping("/post/{postId}/updatecomment/{commentId}")
@@ -31,9 +34,11 @@ public class CommentController {
     @PutMapping("/post/{postId}/updatecommentsubmit/{commentId}")
     public void updateCommentSubmit(@PathVariable("postId") Long postId,
                                     @PathVariable("commentId") Long commentId,
-                                    @RequestParam("content") String content){
-        //        ("user"); //현재 로그인중인 user
-        commentService.updateComment(user.getUserId(), postId, commentId, content);
+                                    @RequestBody Map<String, String> param){
+//                                    @RequestParam("content") String content){
+
+        //        ("user"); //현재 로그인중인 user 와 writer이 동일한지 확인
+        commentService.updateComment(user.getUserId(), postId, commentId, param.get("content"));
     }
 
     @DeleteMapping("/post/{postId}/deletecomment/{commentId}")
