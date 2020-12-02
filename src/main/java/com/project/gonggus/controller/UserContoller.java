@@ -2,6 +2,7 @@ package com.project.gonggus.controller;
 
 import com.project.gonggus.domain.user.JwtService;
 import com.project.gonggus.domain.user.User;
+import com.project.gonggus.domain.user.UserDto;
 import com.project.gonggus.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +41,10 @@ public class UserContoller {
             // UserService.login()을 통하여 유저 정보를 받아와 토큰 생성
             User user = userService.login(userId, userPassword);
             String token = jwtService.create(user);
+            UserDto userData = UserDto.convert(user);
+            // token과 userData 정보를 프론트에 넘겨줌
             resultMap.put("token", token);
+            resultMap.put("userData", user);
             // 생성된 토큰을 Cookie에 저장하고 HttpOnly 설정
             Cookie cookie = new Cookie("auth_token", token);
             cookie.setHttpOnly(true);
@@ -81,13 +86,16 @@ public class UserContoller {
     }
 
     @PostMapping("/checklogin")
-    public ResponseEntity<Map<String, Object>> checkLoginExec(@RequestBody Map<String, Object> body){
+    public ResponseEntity<Map<String, Object>> checkLoginExec(@RequestHeader(value="Cookie") String cookie){
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
-            // 검증을 통하여 JWT 토큰의 payload 부분을 받아옴
-            String token = body.get("auth_token").toString();
-            resultMap = jwtService.get(token);
+            String token = cookie.split("=")[1];
+            resultMap.put("token", token);
+            String userId = jwtService.get(token).get("userid").toString();
+            User rawUserData = userService.getUser(userId);
+            UserDto user = UserDto.convert(rawUserData);
+            resultMap.put("userData", user);
             status = HttpStatus.ACCEPTED;
         } catch (RuntimeException e) {
             resultMap.put("message", e.getMessage());
