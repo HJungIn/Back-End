@@ -21,7 +21,7 @@ public class CommentController {
 //                             @RequestParam("content") String content){
 
         //        ("user"); //현재 로그인중인 user 와 writer이 동일한지 확인
-        commentService.saveComment(user.getUserId(), postId, param.get("content"));
+        commentService.saveComment(user.getUserId(), postId, param.get("content"), Boolean.valueOf(param.get("isEdit")), param.get("createdDate"));
     }
 
     @GetMapping("/post/{postId}/updatecomment/{commentId}")
