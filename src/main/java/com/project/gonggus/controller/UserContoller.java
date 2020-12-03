@@ -92,8 +92,10 @@ public class UserContoller {
         HttpStatus status = null;
         try {
             // 검증을 통하여 JWT 토큰의 payload 부분을 받아옴
-            String token = header.get("cookie").toString()
-                    .substring(12, header.get("cookie").toString().length()-1);
+            String rawData = header.get("cookie").toString();
+            int cookie_start = 12;
+            int cookie_end = rawData.length() - 1;
+            String token = rawData.substring(cookie_start, cookie_end);
             String userId = jwtService.get(token).get("userid").toString();
             User currentUser = userService.getUser(userId);
             UserDto currentUserData = UserDto.convert(currentUser);
