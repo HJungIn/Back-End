@@ -1,9 +1,11 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3307/gonggus?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/gonggus?serverTimezone=Asia/Seoul
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+  profiles:
+    active: dev
   data:
     rest:
       base-path: /api
