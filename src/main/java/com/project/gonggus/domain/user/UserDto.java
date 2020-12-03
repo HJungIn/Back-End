@@ -22,10 +22,6 @@ public class UserDto {
     private String userId;
     private String nickname;
     private String schoolName;
-    private List<UserPost> participatePosts = new ArrayList<>();
-    private List<Post> ownPosts = new ArrayList<>();
-    private ArrayList<Long> bookmarkPosts = new ArrayList<>();
-    private List<Comment> myComments = new ArrayList<>();
 
     public static UserDto convert(User user){
         return UserDto.builder()
@@ -34,10 +30,6 @@ public class UserDto {
                 .userId(user.getUserId())
                 .nickname(user.getNickname())
                 .schoolName(user.getSchoolName())
-                        .participatePosts(user.getParticipatePosts())
-                        .ownPosts(user.getOwnPosts())
-                        .bookmarkPosts(user.getBookmarkPosts())
-                        .myComments(user.getMyComments())
                 .build();
     }
 
