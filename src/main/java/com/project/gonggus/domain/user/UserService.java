@@ -91,13 +91,10 @@ public class UserService {
         return userRepository.findByUserId(userId);
     }
 
-    public User getUserByToken(String token) {
-        String userId = jwtService.get(token).get("userid").toString();
-        return userRepository.findByUserId(userId);
-    }
-
-    public UserDto getUserDto(String userId) {
-        User user = userRepository.findByUserId(userId);
-        return UserDto.convert(user);
+    public User getUserByCookie(String cookie) {
+        String userId = jwtService.getByCookie(cookie)
+                .get("userid")
+                .toString();
+        return getUser(userId);
     }
 }

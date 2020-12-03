@@ -43,4 +43,9 @@ public class JwtService {
 
         return claims.getBody();
     }
+
+    public Map<String, Object> getByCookie (final String cookie) {
+        String token = cookie.split("=")[1];
+        return get(token);
+    }
 }
