@@ -41,7 +41,6 @@ public class UserContoller {
             // UserService.login()을 통하여 유저 정보를 받아와 토큰 생성
             User user = userService.login(userId, userPassword);
             String token = jwtService.create(user);
-            UserDto userData = UserDto.convert(user);
             // token과 userData 정보를 프론트에 넘겨줌
             resultMap.put("token", token);
             resultMap.put("userData", user);
@@ -93,8 +92,7 @@ public class UserContoller {
             String token = cookie.split("=")[1];
             resultMap.put("token", token);
             String userId = jwtService.get(token).get("userid").toString();
-            User rawUserData = userService.getUser(userId);
-            UserDto user = UserDto.convert(rawUserData);
+            User user = userService.getUser(userId);
             resultMap.put("userData", user);
             status = HttpStatus.ACCEPTED;
         } catch (RuntimeException e) {

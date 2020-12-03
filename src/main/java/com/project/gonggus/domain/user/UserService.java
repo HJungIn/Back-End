@@ -14,6 +14,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtService jwtService;
+
     // 비밀번호 SHA-256으로 암호화
     private String encryptString (String input){
         try {
@@ -86,6 +89,12 @@ public class UserService {
 
     public User getUser(String userId) {
         return userRepository.findByUserId(userId);
+    }
 
+    public User getUserByCookie(String cookie) {
+        String userId = jwtService.getByCookie(cookie)
+                .get("userid")
+                .toString();
+        return getUser(userId);
     }
 }
