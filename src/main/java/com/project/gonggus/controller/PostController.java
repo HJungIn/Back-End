@@ -2,9 +2,12 @@ package com.project.gonggus.controller;
 
 import com.project.gonggus.domain.post.PostDto;
 import com.project.gonggus.domain.post.PostService;
+import com.project.gonggus.domain.user.JwtService;
 import com.project.gonggus.domain.user.User;
+import com.project.gonggus.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +18,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PostController {
 
+    @Autowired
     private final PostService postService;
+    @Autowired
+    private final UserService userService;
 
     @GetMapping("/{category}")
     public List<PostDto> categoryPost(@PathVariable("category") String category){
@@ -27,19 +33,21 @@ public class PostController {
         return postService.getSearchPosts(searchTitle);
     }
 
-
-
-    public User user = new User("na","ia","pa","",""); //임시용
     @RequestMapping("/makepost")
-    public void makePost(){
-//        ("user"); //현재 로그인 중인 user가 존재하는가
+    public void makePost(@RequestHeader(value="Cookie") String cookie){
+        User user = userService.getUserByCookie(cookie);
     }
 
     @PostMapping("/makepostsubmit")
-    public void makePostSubmit(@RequestBody Map<String, String> param){
-
-//        ("user"); //현재 로그인중 user 정보가져오기
-        postService.savePost(user.getUserId(), param.get("title"), param.get("content"), param.get("category"),param.get("goodsLink"),param.get("limitNumberOfPeople"),param.get("deadline"));
+    public void makePostSubmit(@RequestBody Map<String, String> param,
+                               @RequestHeader(value="Cookie") String cookie){
+        User user = userService.getUserByCookie(cookie);
+        postService.savePost(user.getUserId(), param.get("title"),
+                param.get("content"),
+                param.get("category"),
+                param.get("goodsLink"),
+                param.get("limitNumberOfPeople"),
+                param.get("deadline"));
     }
 
     @GetMapping("/post/{postId}/update")
@@ -49,9 +57,10 @@ public class PostController {
 
     @PutMapping("/updatepostsubmit/{postId}")
     public void updatePostSubmit(@PathVariable("postId") Long postId,
-                                 @RequestBody Map<String, String> param){
+                                 @RequestBody Map<String, String> param,
+                                 @RequestHeader(value="Cookie") String cookie){
 
-//        ("user"); //현재 로그인중인 user
+        User user = userService.getUserByCookie(cookie); //현재 로그인중인 user
         postService.updatePost(postId, param.get("title"), param.get("content"), param.get("category"),param.get("goodsLink"),param.get("limitNumberOfPeople"),param.get("deadline"));
     }
 
@@ -63,30 +72,30 @@ public class PostController {
 
 
     @PostMapping("/post/{postId}/registerbookmark")
-    public void registerBookmark(@PathVariable("postId") Long postId){
-//        ("user"); //현재 로그인중인 user
+    public void registerBookmark(@PathVariable("postId") Long postId,
+                                 @RequestHeader(value="Cookie") String cookie){
+        User user = userService.getUserByCookie(cookie);
         postService.registerBookmark(user.getUserId(), postId);
     }
 
     @DeleteMapping("/post/{postId}/deletebookmark")
-    public void deleteBookmark(@PathVariable("postId") Long postId){
-//        ("user"); //현재 로그인중인 user
+    public void deleteBookmark(@PathVariable("postId") Long postId,
+                               @RequestHeader(value="Cookie") String cookie){
+        User user = userService.getUserByCookie(cookie);
         postService.deleteBookmark(user.getUserId(), postId);
     }
 
     @PostMapping("/post/{postId}/participatepost")
-    public void participatePost(@PathVariable("postId") Long postId){
-//        ("user"); //현재 로그인중인 user
+    public void participatePost(@PathVariable("postId") Long postId,
+                                @RequestHeader(value="Cookie") String cookie){
+        User user = userService.getUserByCookie(cookie);
         postService.participatePost(user.getUserId(), postId);
     }
 
     @DeleteMapping("/post/{postId}/withdrawpost")
-    public void withdrawPost(@PathVariable("postId") Long postId){
-//        ("user"); //현재 로그인중인 user
+    public void withdrawPost(@PathVariable("postId") Long postId,
+                             @RequestHeader(value="Cookie") String cookie){
+        User user = userService.getUserByCookie(cookie);
         postService.withdrawPost(user.getUserId(), postId);
     }
-
-    public User user2 = new User("na2","ia2","pa2","",""); //임시용
-
-
 }
