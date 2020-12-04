@@ -39,7 +39,7 @@ public class UserContoller {
             String token = jwtService.create(user);
             // token과 userData 정보를 프론트에 넘겨줌
             resultMap.put("token", token);
-            resultMap.put("userData", user);
+            resultMap.put("userData", UserDto.convert(user));
             // 생성된 토큰을 Cookie에 저장하고 HttpOnly 설정
             Cookie cookie = new Cookie("auth_token", token);
             cookie.setHttpOnly(true);
@@ -65,7 +65,8 @@ public class UserContoller {
         Cookie cookie = new Cookie("auth_token", null);
         cookie.setMaxAge(0);
         res.addCookie(cookie);
-        resultMap.put("logout_ok", true);
+        resultMap.put("token", null);
+        resultMap.put("userData", null);
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
@@ -85,37 +86,30 @@ public class UserContoller {
     @PostMapping("/checklogin")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> checkLoginExec(@RequestHeader("Cookie") String cookie){
-        Map<String, Object> resultMap = new HashMap<>();
-        HttpStatus status = null;
+        Map<String, Object> resultMap = null;
+        HttpStatus status;
         try {
-            String token = cookie.split("=")[1];
-            resultMap.put("token", token);
-            String userId = jwtService.get(token).get("userid").toString();
-            User user = userService.getUser(userId);
-            resultMap.put("userData", user);
+            resultMap = userService.createResultBody(cookie);
             status = HttpStatus.ACCEPTED;
         } catch (RuntimeException e) {
-            resultMap.put("message", e.getMessage());
             status = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e);
         }
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
-    @PutMapping("/mypage/{id}/modify")
+    @PutMapping("/mypage/modify")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> updateUserProfile(@PathVariable("id") String id,
+    public ResponseEntity<Map<String, Object>> updateUserProfile(@RequestHeader("Cookie") String cookie,
                                                                  @RequestBody Map<String, Object> body){
-        Map<String, Object> resultMap = new HashMap<>();
-        HttpStatus status = null;
+        Map<String, Object> resultMap;
+        HttpStatus status;
 
         String name = body.get("name").toString();
         String nickname = body.get("nickname").toString();
-        userService.updateUserProfile(id, name, nickname);
+        userService.updateUserProfile(cookie, name, nickname);
+        resultMap = userService.createResultBody(cookie);
 
-        User user = userService.getUser(id);
-        resultMap.put("userData", user);
         status = HttpStatus.ACCEPTED;
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);

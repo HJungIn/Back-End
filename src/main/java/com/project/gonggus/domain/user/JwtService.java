@@ -21,7 +21,7 @@ public class JwtService {
                 .setHeaderParam("typ", "JWT")
                 .setSubject("userid")
                 .claim("id", user.getId())
-                .claim("userid", user.getUserId())
+                .claim("userId", user.getUserId())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * expire))
                 .setIssuer(issuer)
                 .signWith(SignatureAlgorithm.HS256, jwtSecret.getBytes());

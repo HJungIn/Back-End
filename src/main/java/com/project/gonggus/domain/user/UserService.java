@@ -3,11 +3,14 @@ package com.project.gonggus.domain.user;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -105,14 +108,29 @@ public class UserService {
 
     public User getUserByCookie(String cookie) {
         String userId = jwtService.getByCookie(cookie)
-                .get("userid")
+                .get("userId")
                 .toString();
         return getUser(userId);
     }
 
-    public void updateUserProfile(String userId, String name, String nickname) {
-        User user = userRepository.findByUserId(userId);
+    public void updateUserProfile(String cookie, String name, String nickname) {
+        User user = getUserByCookie(cookie);
         user.setName(name);
         user.setNickname(nickname);
+        userRepository.save(user);
+    }
+
+    public Map<String, Object> createResultBody(String cookie) {
+        Map<String, Object> resultMap = new HashMap<>();
+        try {
+            String token = cookie.split("=")[1];
+            resultMap.put("token", token);
+            String userId = jwtService.get(token).get("userId").toString();
+            UserDto userData = UserDto.convert(getUser(userId));
+            resultMap.put("userData", userData);
+        } catch (RuntimeException e) {
+            resultMap.put("message", "존재하지 않는 유저입니다.");
+        }
+        return resultMap;
     }
 }
