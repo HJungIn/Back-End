@@ -1,18 +1,12 @@
 package com.project.gonggus.controller;
 
-import com.project.gonggus.domain.user.JwtService;
-import com.project.gonggus.domain.user.User;
-import com.project.gonggus.domain.user.UserDto;
-import com.project.gonggus.domain.user.UserService;
+import com.project.gonggus.domain.user.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -63,6 +57,7 @@ public class UserContoller {
     }
 
     @PostMapping("/logout")
+    @ResponseBody
     public ResponseEntity<Map<String, Object>> logoutExec(HttpServletResponse res){
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.NO_CONTENT;
@@ -76,6 +71,7 @@ public class UserContoller {
     }
 
     @PostMapping("/register")
+    @ResponseBody
     public void registerExec(@RequestBody Map<String, Object> body) {
         String userId = body.get("userId").toString();
         String userPassword = body.get("userPassword").toString();
@@ -87,7 +83,8 @@ public class UserContoller {
     }
 
     @PostMapping("/checklogin")
-    public ResponseEntity<Map<String, Object>> checkLoginExec(@RequestHeader(value="Cookie") String cookie){
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> checkLoginExec(@RequestHeader("Cookie") String cookie){
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
@@ -102,6 +99,24 @@ public class UserContoller {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             System.out.println(e);
         }
+
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+    @PutMapping("/mypage/{id}/modify")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateUserProfile(@PathVariable("id") String id,
+                                                                 @RequestBody Map<String, Object> body){
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+
+        String name = body.get("name").toString();
+        String nickname = body.get("nickname").toString();
+        userService.updateUserProfile(id, name, nickname);
+
+        User user = userService.getUser(id);
+        resultMap.put("userData", user);
+        status = HttpStatus.ACCEPTED;
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
