@@ -99,6 +99,11 @@ public class PostService {
         Post post = postRepository.findById(postId).orElse(null);
         if(user==null || post==null) return;
 
+        UserPost userPost_check = userPostService.getUserPost(user, post);
+        if(userPost_check!= null){
+            return;
+        }
+
         UserPost userPost = new UserPost(user, post);
         userPostService.saveUserPost(userPost);
         post.setCurrentNumberOfPeople(post.getCurrentNumberOfPeople()+1);
