@@ -45,6 +45,7 @@ public class JwtService {
     }
 
     public Map<String, Object> getByCookie (final String cookie) {
+        if (cookie.equals(null)) return null;
         String token = cookie.split("=")[1];
         return get(token);
     }

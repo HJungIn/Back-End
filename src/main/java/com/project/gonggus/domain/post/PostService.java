@@ -4,7 +4,6 @@ import com.project.gonggus.domain.user.User;
 import com.project.gonggus.domain.user.UserService;
 import com.project.gonggus.domain.userpost.UserPost;
 import com.project.gonggus.domain.userpost.UserPostService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,6 +97,11 @@ public class PostService {
         User user = userService.getUser(userId);
         Post post = postRepository.findById(postId).orElse(null);
         if(user==null || post==null) return;
+
+        UserPost userPost_check = userPostService.getUserPost(user, post);
+        if(userPost_check!= null){
+            return;
+        }
 
         UserPost userPost = new UserPost(user, post);
         userPostService.saveUserPost(userPost);

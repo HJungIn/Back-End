@@ -17,7 +17,7 @@ public class CommentService {
     private final UserService userService;
     private final PostService postService;
 
-    public void saveComment(String userId, Long postId, String content) {
+    public void saveComment(String userId, Long postId, String content, Boolean isEdit, String createdDate) {
 
         User user = userService.getUser(userId);
         Post post = postService.getPost(postId);
@@ -25,7 +25,7 @@ public class CommentService {
             return;
         }
 
-        Comment comment = new Comment(user, post, content);
+        Comment comment = new Comment(user, post, content, isEdit, createdDate);
         commentRepository.save(comment);
 
     }

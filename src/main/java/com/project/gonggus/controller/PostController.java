@@ -2,11 +2,9 @@ package com.project.gonggus.controller;
 
 import com.project.gonggus.domain.post.PostDto;
 import com.project.gonggus.domain.post.PostService;
-import com.project.gonggus.domain.user.JwtService;
 import com.project.gonggus.domain.user.User;
 import com.project.gonggus.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +27,7 @@ public class PostController {
     }
 
     @GetMapping("/searchpost")
-    public List<PostDto> searchPost(@RequestParam("search") String searchTitle){
+    public List<PostDto> searchPost(@RequestParam("search") String searchTitle) {
         return postService.getSearchPosts(searchTitle);
     }
 

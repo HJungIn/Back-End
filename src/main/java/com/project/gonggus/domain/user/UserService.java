@@ -1,9 +1,7 @@
 package com.project.gonggus.domain.user;
 
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
@@ -122,6 +120,7 @@ public class UserService {
 
     public Map<String, Object> createResultBody(String cookie) {
         Map<String, Object> resultMap = new HashMap<>();
+        if (cookie.equals(null)) return null;
         try {
             String token = cookie.split("=")[1];
             resultMap.put("token", token);
