@@ -62,7 +62,7 @@ public class PostController {
         postService.updatePost(postId, param.get("title"), param.get("content"), param.get("category"),param.get("goodsLink"),param.get("limitNumberOfPeople"),param.get("deadline"));
     }
 
-    //1.이 페이지에 댓글하고 다 보일건데.. 로그인 한 user가 참여했으면 보이고 참여안했으면 안보임
+
     @GetMapping("/post/{postId}")
     public PostDto detailPost(@PathVariable("postId") Long postId){
         return postService.getPostDto(postId);

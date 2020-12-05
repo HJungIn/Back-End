@@ -8,7 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +39,7 @@ public class PostService {
 
     public PostDto getPostDto(Long postId) {
         Post post = postRepository.findById(postId).orElse(null);
+        checkDateForFinishCheck(post);
         return post != null ? PostDto.convert(post) : null;
     }
 
@@ -106,6 +111,9 @@ public class PostService {
         UserPost userPost = new UserPost(user, post);
         userPostService.saveUserPost(userPost);
         post.setCurrentNumberOfPeople(post.getCurrentNumberOfPeople()+1);
+        if(post.getCurrentNumberOfPeople() == post.getLimitNumberOfPeople()){
+            post.setFinishCheck(true);
+        }
     }
 
     public void withdrawPost(String userId, Long postId) {
@@ -120,7 +128,7 @@ public class PostService {
         UserPost userPost = userPostService.getUserPost(user, post);
         userPostService.deleteUserPost(userPost);
         post.setCurrentNumberOfPeople(post.getCurrentNumberOfPeople()-1);
-
+        post.setFinishCheck(false);
     }
 
     public void deletePost(String userId, Long postId) {
@@ -136,6 +144,28 @@ public class PostService {
             postRepository.delete(post);
             return;
         }
+
+    }
+
+    public void checkDateForFinishCheck(Post post){
+
+        String current_str = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date current = fm.parse(current_str);
+            System.out.println(post.getDeadline().compareTo(current));
+            if( current.compareTo(post.getDeadline()) <= 0 ){
+
+            }
+            else{
+                post.setFinishCheck(true);
+            }
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
     }
 }
