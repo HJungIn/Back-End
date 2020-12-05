@@ -153,7 +153,6 @@ public class PostService {
         SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date current = fm.parse(current_str);
-            System.out.println(post.getDeadline().compareTo(current));
             if( current.compareTo(post.getDeadline()) <= 0 ){
 
             }
