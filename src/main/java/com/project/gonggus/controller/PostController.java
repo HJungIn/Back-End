@@ -96,4 +96,12 @@ public class PostController {
         User user = userService.getUserByCookie(cookie);
         postService.withdrawPost(user.getUserId(), postId);
     }
+
+    @DeleteMapping("/post/{postId}/deletepost")
+    public void deletePost(@PathVariable("postId") Long postId,
+                           @RequestHeader(value = "Cookie") String cookie){
+
+        User user = userService.getUserByCookie(cookie);
+        postService.deletePost(user.getUserId(), postId);
+    }
 }

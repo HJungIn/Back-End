@@ -114,15 +114,28 @@ public class PostService {
         if(user==null || post==null) return;
 
         if(user == post.getOwner()){
-            if(post.getCurrentNumberOfPeople()!=1)
-                return;
-            postRepository.delete(post);
             return;
         }
 
         UserPost userPost = userPostService.getUserPost(user, post);
         userPostService.deleteUserPost(userPost);
         post.setCurrentNumberOfPeople(post.getCurrentNumberOfPeople()-1);
+
+    }
+
+    public void deletePost(String userId, Long postId) {
+
+        User user = userService.getUser(userId);
+        Post post = getPost(postId);
+        if(user == null || post==null)
+            return;
+
+        if(user == post.getOwner()){
+            if(post.getCurrentNumberOfPeople()!=1)
+                return;
+            postRepository.delete(post);
+            return;
+        }
 
     }
 }
