@@ -17,11 +17,12 @@ public class CommentController {
     private final UserService userService;
 
     @PostMapping("/post/{postId}/writecommentsubmit")
-    public void writeCommentSubmit(@PathVariable("postId") Long postId,
-                                   @RequestBody Map<String, String> param,
-                                   @RequestHeader("Cookie") String cookie){
+    public CommentDto writeCommentSubmit(@PathVariable("postId") Long postId,
+                                         @RequestBody Map<String, String> param,
+                                         @RequestHeader("Cookie") String cookie){
         User user = userService.getUserByCookie(cookie);
-        commentService.saveComment(user.getUserId(), postId, param.get("content"), Boolean.valueOf(param.get("isEdit")), param.get("createdDate"));
+        Long commentId = commentService.saveComment(user.getUserId(), postId, param.get("content"), Boolean.valueOf(param.get("isEdit")), param.get("createdDate"));
+        return commentService.getCommentDto(commentId);
     }
 
     @GetMapping("/post/{postId}/updatecomment/{commentId}")
