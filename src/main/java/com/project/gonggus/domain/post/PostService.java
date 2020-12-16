@@ -4,12 +4,15 @@ import com.project.gonggus.domain.user.User;
 import com.project.gonggus.domain.user.UserService;
 import com.project.gonggus.domain.userpost.UserPost;
 import com.project.gonggus.domain.userpost.UserPostService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +39,7 @@ public class PostService {
 
     public PostDto getPostDto(Long postId) {
         Post post = postRepository.findById(postId).orElse(null);
+        checkDateForFinishCheck(post);
         return post != null ? PostDto.convert(post) : null;
     }
 
@@ -99,9 +103,17 @@ public class PostService {
         Post post = postRepository.findById(postId).orElse(null);
         if(user==null || post==null) return;
 
+        UserPost userPost_check = userPostService.getUserPost(user, post);
+        if(userPost_check!= null){
+            return;
+        }
+
         UserPost userPost = new UserPost(user, post);
         userPostService.saveUserPost(userPost);
         post.setCurrentNumberOfPeople(post.getCurrentNumberOfPeople()+1);
+        if(post.getCurrentNumberOfPeople() == post.getLimitNumberOfPeople()){
+            post.setFinishCheck(true);
+        }
     }
 
     public void withdrawPost(String userId, Long postId) {
@@ -110,15 +122,49 @@ public class PostService {
         if(user==null || post==null) return;
 
         if(user == post.getOwner()){
-            if(post.getCurrentNumberOfPeople()!=1)
-                return;
-            postRepository.delete(post);
             return;
         }
 
         UserPost userPost = userPostService.getUserPost(user, post);
         userPostService.deleteUserPost(userPost);
         post.setCurrentNumberOfPeople(post.getCurrentNumberOfPeople()-1);
+        post.setFinishCheck(false);
+    }
+
+    public void deletePost(String userId, Long postId) {
+
+        User user = userService.getUser(userId);
+        Post post = getPost(postId);
+        if(user == null || post==null)
+            return;
+
+        if(user == post.getOwner()){
+            if(post.getCurrentNumberOfPeople()!=1)
+                return;
+            postRepository.delete(post);
+            return;
+        }
+
+    }
+
+    public void checkDateForFinishCheck(Post post){
+
+        String current_str = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date current = fm.parse(current_str);
+            if( current.compareTo(post.getDeadline()) <= 0 ){
+
+            }
+            else{
+                post.setFinishCheck(true);
+            }
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
     }
 }

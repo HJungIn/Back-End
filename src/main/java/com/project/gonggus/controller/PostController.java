@@ -2,11 +2,9 @@ package com.project.gonggus.controller;
 
 import com.project.gonggus.domain.post.PostDto;
 import com.project.gonggus.domain.post.PostService;
-import com.project.gonggus.domain.user.JwtService;
 import com.project.gonggus.domain.user.User;
 import com.project.gonggus.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +27,7 @@ public class PostController {
     }
 
     @GetMapping("/searchpost")
-    public List<PostDto> searchPost(@RequestParam("search") String searchTitle){
+    public List<PostDto> searchPost(@RequestParam("search") String searchTitle) {
         return postService.getSearchPosts(searchTitle);
     }
 
@@ -64,7 +62,7 @@ public class PostController {
         postService.updatePost(postId, param.get("title"), param.get("content"), param.get("category"),param.get("goodsLink"),param.get("limitNumberOfPeople"),param.get("deadline"));
     }
 
-    //1.이 페이지에 댓글하고 다 보일건데.. 로그인 한 user가 참여했으면 보이고 참여안했으면 안보임
+
     @GetMapping("/post/{postId}")
     public PostDto detailPost(@PathVariable("postId") Long postId){
         return postService.getPostDto(postId);
@@ -97,5 +95,13 @@ public class PostController {
                              @RequestHeader(value="Cookie") String cookie){
         User user = userService.getUserByCookie(cookie);
         postService.withdrawPost(user.getUserId(), postId);
+    }
+
+    @DeleteMapping("/post/{postId}/deletepost")
+    public void deletePost(@PathVariable("postId") Long postId,
+                           @RequestHeader(value = "Cookie") String cookie){
+
+        User user = userService.getUserByCookie(cookie);
+        postService.deletePost(user.getUserId(), postId);
     }
 }

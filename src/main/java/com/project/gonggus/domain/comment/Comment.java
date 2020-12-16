@@ -24,20 +24,26 @@ public class Comment {
 
     private String content;
 
+    private Boolean isEdit;
+
+    private String createdDate;
+
     @ManyToOne
     @JoinColumn(name = "POST_ID")
     private Post post;
 
     @Builder
-    public Comment(User writer, Post post, String content){
+    public Comment(User writer, Post post, String content, Boolean isEdit, String createdDate){
         this.writer = writer;
         this.post = post;
         this.content = content;
+        this.isEdit = isEdit;
+        this.createdDate = createdDate;
         this.setWriter(writer);
         this.setPost(post);
     }
 
-    public void  setWriter(User writer){
+    public void setWriter(User writer){
         this.writer = writer;
         writer.getMyComments().add(this);
     }
