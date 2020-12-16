@@ -39,7 +39,7 @@ public class User {
         this.name=name;
         this.userId=userId;
         this.userPassword=userPassword;
-        this.nickname =nickname;
+        this.nickname=nickname;
         this.schoolName=schoolName;
     }
 

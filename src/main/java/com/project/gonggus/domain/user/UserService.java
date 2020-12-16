@@ -1,9 +1,11 @@
 package com.project.gonggus.domain.user;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -19,8 +21,31 @@ public class UserService {
     @Autowired
     private JwtService jwtService;
 
+    private final int ONE_DAY = 86400;
+
+    // 로그인
+    public Map<String, Object> login (String id, String password) {
+        // 입력된 아이디, 비밀번호 길이 검사
+        if(id.length() <= 0 || password.length() <= 0) {
+            return null;
+        }
+
+        // 유저 데이터 요청
+        User user = userRepository.findByUserId(id);
+        String token = jwtService.create(user);
+
+        // 사용자 입력 비밀번호 인코딩 후 비밀번호 대조
+        String inputPassword = encryptString(password);
+        if(!compareString(inputPassword, user.getUserPassword())) {
+            return null;
+        }
+
+        return createResultMap(user, token);
+    }
+
     // 회원가입
-    public Long register (User user) {
+    public void register (Map<String, Object> body) {
+        User user = getUserByRequestBody(body);
         String password, encryptedPassword = null;
         // 회원 중복 체크
         try {
@@ -39,7 +64,47 @@ public class UserService {
 
         // 리포지토리를 통하여 데이터베이스에 저장
         userRepository.save(user);
-        return user.getId();
+    }
+
+    // 로그인 확인
+    public Map<String, Object> check (String token) {
+        Map<String, Object> resultMap = new HashMap<>();
+        User user = getUser(
+                jwtService.get(token)
+                        .get("userid")
+                        .toString()
+        );
+        return createResultMap(user, token);
+    }
+
+    // 유저 정보 수정
+    public Map<String, Object> updateProfile(String token, String name, String nickname) {
+        String userId = jwtService.get(token)
+                .get("userid")
+                .toString();
+        User user = userRepository.findByUserId(userId);
+        user.setName(name);
+        user.setNickname(nickname);
+        userRepository.save(user);
+        return createResultMap(user, token);
+    }
+
+    // 쿠키 생성
+    public Cookie setAuthCookie (String token, int expday) {
+        Cookie cookie = new Cookie("auth_token", token);
+        cookie.setMaxAge(expday * ONE_DAY);
+        cookie.setHttpOnly(true);
+        return cookie;
+    }
+
+    //
+    private User getUserByRequestBody(Map<String, Object> body) {
+        String name = body.get("name").toString();
+        String userId = body.get("userId").toString();
+        String userPassword = body.get("userPassword").toString();
+        String nickname = body.get("nickname").toString();
+        String schoolName = body.get("schoolName").toString();
+        return new User(name, userId, userPassword, nickname, schoolName);
     }
 
     // 비밀번호 SHA-256으로 암호화
@@ -66,32 +131,6 @@ public class UserService {
         }
     }
 
-    // 로그인
-    public User login (String id, String password) {
-        // 입력된 아이디, 비밀번호 길이 검사
-        if(id.length() <= 0 || password.length() <= 0) {
-            return null;
-        }
-
-        // 유저 데이터 요청
-        User user = null;
-        String inputPassword = null, userPassword = null;
-        try {
-            user = userRepository.findByUserId(id);
-            inputPassword = encryptString(password);
-            userPassword = user.getUserPassword();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-
-        // 사용자 입력 비밀번호 인코딩 후 비밀번호 대조
-        if(!compareString(inputPassword, userPassword)) {
-            return null;
-        }
-
-        return user;
-    }
-
     private Boolean compareString (String a, String b){
         return a.equals(b);
     }
@@ -106,30 +145,16 @@ public class UserService {
 
     public User getUserByCookie(String cookie) {
         String userId = jwtService.getByCookie(cookie)
-                .get("userId")
+                .get("userid")
                 .toString();
         return getUser(userId);
     }
 
-    public void updateUserProfile(String cookie, String name, String nickname) {
-        User user = getUserByCookie(cookie);
-        user.setName(name);
-        user.setNickname(nickname);
-        userRepository.save(user);
-    }
-
-    public Map<String, Object> createResultBody(String cookie) {
+    private Map<String, Object> createResultMap(User user, String token){
         Map<String, Object> resultMap = new HashMap<>();
-        if (cookie.equals(null)) return null;
-        try {
-            String token = cookie.split("=")[1];
-            resultMap.put("token", token);
-            String userId = jwtService.get(token).get("userId").toString();
-            UserDto userData = UserDto.convert(getUser(userId));
-            resultMap.put("userData", userData);
-        } catch (RuntimeException e) {
-            resultMap.put("message", "존재하지 않는 유저입니다.");
-        }
+        UserDto userData = UserDto.convert(user);
+        resultMap.put("token", token);
+        resultMap.put("userData", userData);
         return resultMap;
     }
 }

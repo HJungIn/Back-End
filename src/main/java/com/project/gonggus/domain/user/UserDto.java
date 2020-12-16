@@ -1,12 +1,16 @@
 package com.project.gonggus.domain.user;
 
+import com.project.gonggus.domain.comment.Comment;
+import com.project.gonggus.domain.post.Post;
+import com.project.gonggus.domain.userpost.UserPost;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
@@ -20,14 +24,14 @@ public class UserDto {
     private String schoolName;
     private List<Long> participatePosts;
     private List<Long> ownPosts;
-    private ArrayList<Long> bookmarkPosts;
+    private List<Long> bookmarkPosts;
 
     public static UserDto convert(User user){
-        List<Long> participate = user.getParticipatePosts().stream()
-                .map(m -> m.getId()).collect(Collectors.toList());
+        List<Long> participate = new ArrayList<>();
+        user.getParticipatePosts().stream().map(post -> participate.add(post.getId()));
 
-        List<Long> own = user.getOwnPosts().stream()
-                .map(m -> m.getId()).collect(Collectors.toList());
+        List<Long> own = new ArrayList<>();
+        user.getOwnPosts().stream().map(post -> own.add(post.getId()));
 
         return UserDto.builder()
                 .id(user.getId())

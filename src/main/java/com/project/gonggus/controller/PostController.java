@@ -105,3 +105,4 @@ public class PostController {
         postService.deletePost(user.getUserId(), postId);
     }
 }
+
