@@ -22,14 +22,26 @@ public class UserDto {
     private String userId;
     private String nickname;
     private String schoolName;
+    private List<Long> participatePosts;
+    private List<Long> ownPosts;
+    private List<Long> bookmarkPosts;
 
     public static UserDto convert(User user){
+        List<Long> participate = new ArrayList<>();
+        user.getParticipatePosts().stream().map(post -> participate.add(post.getId()));
+
+        List<Long> own = new ArrayList<>();
+        user.getOwnPosts().stream().map(post -> own.add(post.getId()));
+
         return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .userId(user.getUserId())
                 .nickname(user.getNickname())
                 .schoolName(user.getSchoolName())
+                .participatePosts(participate)
+                .ownPosts(own)
+                .bookmarkPosts(user.getBookmarkPosts())
                 .build();
     }
 
