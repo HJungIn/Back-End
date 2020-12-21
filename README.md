@@ -133,10 +133,10 @@ post<br/>
 <br>
 * 게시글에서 탈퇴하기 : /post/{postId}/withdrawpost<br>
  - 백엔드가 받는 데이터 : postId (Long)<br>
- <br>
-  * 게시글에서 탈퇴하기 : /post/{postId}/deletepost<br>
-   - 백엔드가 받는 데이터 : postId (Long)<br>
-    <br>
+<br>
+* 게시글 삭제하기 : /post/{postId}/deletepost<br>
+ - 백엔드가 받는 데이터 : postId (Long)<br>
+  <br>
   
 </pre>
 <br>
