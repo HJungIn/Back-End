@@ -2,6 +2,7 @@ package com.project.gonggus.controller;
 
 import com.project.gonggus.domain.post.PostDto;
 import com.project.gonggus.domain.post.PostService;
+import com.project.gonggus.domain.user.JwtService;
 import com.project.gonggus.domain.user.User;
 import com.project.gonggus.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class PostController {
 
     private final PostService postService;
     private final UserService userService;
+    private final JwtService jwtService;
 
     public User user = new User("a","a@n","a","aa","aa"); //임시용
 
@@ -33,12 +35,19 @@ public class PostController {
 
     @RequestMapping("/makepost")
     public void makePost(){
-//        User user = userService.getUserByCookie(cookie);
     }
 
     @PostMapping("/makepostsubmit")
-    public void makePostSubmit(@RequestBody Map<String, String> param){
-//        User user = userService.getUserByCookie(cookie);
+    public void makePostSubmit(@RequestBody Map<String, String> param,
+                               @RequestHeader Map<String, String> res) throws Exception{
+        String jwt = res.get("jwt");
+        if (jwt == null || !jwtService.checkJwt(jwt)) {
+            return ;
+        }
+        User user = jwtService.getUserByJwt(jwt);
+        if(user==null)
+            return ;
+
         postService.savePost(user.getUserId(), param.get("title"),
                 param.get("content"),
                 param.get("category"),
@@ -54,9 +63,16 @@ public class PostController {
 
     @PutMapping("/updatepostsubmit/{postId}")
     public void updatePostSubmit(@PathVariable("postId") Long postId,
-                                 @RequestBody Map<String, String> param){
+                                 @RequestBody Map<String, String> param,
+                                 @RequestHeader Map<String, String> res) throws Exception{
+        String jwt = res.get("jwt");
+        if (jwt == null || !jwtService.checkJwt(jwt)) {
+            return ;
+        }
+        User user = jwtService.getUserByJwt(jwt);
+        if(user==null)
+            return ;
 
-//        User user = userService.getUserByCookie(cookie); //현재 로그인중인 user
         postService.updatePost(postId, param.get("title"), param.get("content"), param.get("category"),param.get("goodsLink"),param.get("limitNumberOfPeople"),param.get("deadline"));
     }
 
@@ -68,33 +84,72 @@ public class PostController {
 
 
     @PostMapping("/post/{postId}/registerbookmark")
-    public void registerBookmark(@PathVariable("postId") Long postId){
-//        User user = userService.getUserByCookie(cookie);
+    public void registerBookmark(@PathVariable("postId") Long postId,
+                                 @RequestHeader Map<String, String> res) throws Exception{
+        String jwt = res.get("jwt");
+        if (jwt == null || !jwtService.checkJwt(jwt)) {
+            return ;
+        }
+        User user = jwtService.getUserByJwt(jwt);
+        if(user==null)
+            return ;
+
         postService.registerBookmark(user.getUserId(), postId);
     }
 
     @DeleteMapping("/post/{postId}/deletebookmark")
-    public void deleteBookmark(@PathVariable("postId") Long postId){
-//        User user = userService.getUserByCookie(cookie);
+    public void deleteBookmark(@PathVariable("postId") Long postId,
+                               @RequestHeader Map<String, String> res) throws Exception{
+        String jwt = res.get("jwt");
+        if (jwt == null || !jwtService.checkJwt(jwt)) {
+            return ;
+        }
+        User user = jwtService.getUserByJwt(jwt);
+        if(user==null)
+            return ;
+
         postService.deleteBookmark(user.getUserId(), postId);
     }
 
     @PostMapping("/post/{postId}/participatepost")
-    public void participatePost(@PathVariable("postId") Long postId){
-//        User user = userService.getUserByCookie(cookie);
+    public void participatePost(@PathVariable("postId") Long postId,
+                                @RequestHeader Map<String, String> res) throws Exception{
+        String jwt = res.get("jwt");
+        if (jwt == null || !jwtService.checkJwt(jwt)) {
+            return ;
+        }
+        User user = jwtService.getUserByJwt(jwt);
+        if(user==null)
+            return ;
+
         postService.participatePost(user.getUserId(), postId);
     }
 
     @DeleteMapping("/post/{postId}/withdrawpost")
-    public void withdrawPost(@PathVariable("postId") Long postId){
-//        User user = userService.getUserByCookie(cookie);
+    public void withdrawPost(@PathVariable("postId") Long postId,
+                             @RequestHeader Map<String, String> res) throws Exception{
+        String jwt = res.get("jwt");
+        if (jwt == null || !jwtService.checkJwt(jwt)) {
+            return ;
+        }
+        User user = jwtService.getUserByJwt(jwt);
+        if(user==null)
+            return ;
+
         postService.withdrawPost(user.getUserId(), postId);
     }
 
     @DeleteMapping("/post/{postId}/deletepost")
-    public void deletePost(@PathVariable("postId") Long postId){
+    public void deletePost(@PathVariable("postId") Long postId,
+                           @RequestHeader Map<String, String> res) throws Exception{
+        String jwt = res.get("jwt");
+        if (jwt == null || !jwtService.checkJwt(jwt)) {
+            return ;
+        }
+        User user = jwtService.getUserByJwt(jwt);
+        if(user==null)
+            return ;
 
-//        User user = userService.getUserByCookie(cookie);
         postService.deletePost(user.getUserId(), postId);
     }
 }
