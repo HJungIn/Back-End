@@ -6,7 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,8 @@ public class PostDto {
     private String goodsLink;
     private long currentNumberOfPeople;
     private long limitNumberOfPeople;
-    private Date deadline;
+    private String deadline;
+    private String createdDate;
     private boolean finishCheck;
     private UserDto owner;
     private List<CommentDto> comments;
@@ -36,7 +38,8 @@ public class PostDto {
                 .goodsLink(post.getGoodsLink())
                 .currentNumberOfPeople(post.getCurrentNumberOfPeople())
                 .limitNumberOfPeople(post.getLimitNumberOfPeople())
-                .deadline(post.getDeadline())
+                .deadline(new SimpleDateFormat("yyyy-MM-dd").format(post.getDeadline()))
+                .createdDate(post.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .finishCheck(post.getFinishCheck())
                 .owner(UserDto.convert(post.getOwner()))
                 .comments(post.getComments().stream().map(CommentDto::convert).collect(Collectors.toList()))

@@ -17,17 +17,18 @@ public class CommentService {
     private final UserService userService;
     private final PostService postService;
 
-    public void saveComment(String userId, Long postId, String content) {
+    public Long saveComment(String userId, Long postId, String content, Boolean isEdit, String createdDate) {
 
         User user = userService.getUser(userId);
         Post post = postService.getPost(postId);
         if(post == null){
-            return;
+            return Long.valueOf(0);
         }
 
-        Comment comment = new Comment(user, post, content);
-        commentRepository.save(comment);
+        Comment comment = new Comment(user, post, content, isEdit, createdDate);
+        Comment save_comment = commentRepository.save(comment);
 
+        return save_comment.getId();
     }
 
     public CommentDto getCommentDto(Long commentId) {
