@@ -2,9 +2,7 @@ package com.project.gonggus.controller;
 
 import com.project.gonggus.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -12,11 +10,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @PostMapping("/signupuser")
-    private void signUpUser(@RequestBody Map<String, String> param){
+    public void signUpUser(@RequestBody Map<String, String> param){
         userService.saveUser(param);
+    }
 
+    @PutMapping("/user/{id}/editmyinfo")
+    public void editMyInfo(@PathVariable("id") Long userIdx,
+                             @RequestBody Map<String, String> param){
+        userService.editUserInfo(userIdx, param);
     }
 }
