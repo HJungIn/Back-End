@@ -2,6 +2,7 @@ package com.project.gonggus.controller;
 
 import com.project.gonggus.domain.post.PostDto;
 import com.project.gonggus.domain.user.JwtService;
+import com.project.gonggus.domain.user.UserDto;
 import com.project.gonggus.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,11 @@ public class UserController {
     @PostMapping("/signupuser")
     public void signUpUser(@RequestBody Map<String, String> param){
         userService.saveUser(param);
+    }
+
+    @GetMapping("/user/{id}/mypage")
+    public UserDto myPage(@PathVariable("id") Long userIdx){
+        return userService.getUserByUserDto(userIdx);
     }
 
     @PutMapping("/user/{id}/editmyinfo")

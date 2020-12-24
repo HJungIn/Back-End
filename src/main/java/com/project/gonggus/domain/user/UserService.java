@@ -88,4 +88,12 @@ public class UserService {
 
         return true;
     }
+
+    public UserDto getUserByUserDto(Long userIdx) {
+        User user = getUserByIndex(userIdx);
+        if(user==null)
+            return null;
+
+        return UserDto.convert(user);
+    }
 }
