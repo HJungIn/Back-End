@@ -1,9 +1,11 @@
 package com.project.gonggus.controller;
 
+import com.project.gonggus.domain.post.PostDto;
 import com.project.gonggus.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,5 +23,10 @@ public class UserController {
     public void editMyInfo(@PathVariable("id") Long userIdx,
                              @RequestBody Map<String, String> param){
         userService.editUserInfo(userIdx, param);
+    }
+
+    @GetMapping("/user/{id}/mybookmarkposts")
+    public List<PostDto> usersBookmarkPosts(@PathVariable("id") Long userIdx){
+        return userService.getUsersBookmarkPosts(userIdx);
     }
 }

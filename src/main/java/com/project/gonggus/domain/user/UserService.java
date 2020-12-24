@@ -1,10 +1,17 @@
 package com.project.gonggus.domain.user;
 
+import com.project.gonggus.domain.post.Post;
+import com.project.gonggus.domain.post.PostDto;
+import com.project.gonggus.domain.post.PostRepository;
+import com.project.gonggus.domain.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -12,6 +19,7 @@ import java.util.Map;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     public void saveUser(Map<String, String> param){
         if(param.isEmpty()){
@@ -54,5 +62,11 @@ public class UserService {
     private User getUserByIndex(Long userIdx) {
         User user = userRepository.findByUserIdx(userIdx);
         return user;
+    }
+
+    public List<PostDto> getUsersBookmarkPosts(Long userIdx) {
+        User user = getUserByIndex(userIdx);
+        List<Post> usersBookmarkPosts = postRepository.findUsersBookmarkPosts(user.getBookmarkPosts());
+        return usersBookmarkPosts.stream().map(PostDto::convert).collect(Collectors.toList());
     }
 }
