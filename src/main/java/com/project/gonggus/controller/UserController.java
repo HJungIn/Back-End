@@ -2,6 +2,7 @@ package com.project.gonggus.controller;
 
 import com.project.gonggus.domain.post.PostDto;
 import com.project.gonggus.domain.user.JwtService;
+import com.project.gonggus.domain.user.User;
 import com.project.gonggus.domain.user.UserDto;
 import com.project.gonggus.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,23 +24,59 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}/mypage")
-    public UserDto myPage(@PathVariable("id") Long userIdx){
+    public UserDto myPage(@PathVariable("id") Long userIdx,
+                          @RequestHeader Map<String, String> res) throws Exception{
+        String jwt = res.get("jwt");
+        if (jwt == null || !jwtService.checkJwt(jwt)) {
+            return null;
+        }
+        User user = jwtService.getUserByJwt(jwt);
+        if(user==null || userIdx!=user.getId())
+            return null;
+
         return userService.getUserByUserDto(userIdx);
     }
 
     @PutMapping("/user/{id}/editmyinfo")
     public void editMyInfo(@PathVariable("id") Long userIdx,
-                             @RequestBody Map<String, String> param){
+                             @RequestBody Map<String, String> param,
+                           @RequestHeader Map<String, String> res) throws Exception{
+        String jwt = res.get("jwt");
+        if (jwt == null || !jwtService.checkJwt(jwt)) {
+            return ;
+        }
+        User user = jwtService.getUserByJwt(jwt);
+        if(user==null || userIdx!=user.getId())
+            return ;
+
         userService.editUserInfo(userIdx, param);
     }
 
     @GetMapping("/user/{id}/mybookmarkposts")
-    public List<PostDto> usersBookmarkPosts(@PathVariable("id") Long userIdx){
+    public List<PostDto> usersBookmarkPosts(@PathVariable("id") Long userIdx,
+                                            @RequestHeader Map<String, String> res) throws Exception{
+        String jwt = res.get("jwt");
+        if (jwt == null || !jwtService.checkJwt(jwt)) {
+            return null;
+        }
+        User user = jwtService.getUserByJwt(jwt);
+        if(user==null || userIdx!=user.getId())
+            return null;
+
         return userService.getUsersBookmarkPosts(userIdx);
     }
 
     @GetMapping("/user/{id}/myparticipateposts")
-    public List<PostDto> usersParticipatePosts(@PathVariable("id") Long userIdx){
+    public List<PostDto> usersParticipatePosts(@PathVariable("id") Long userIdx,
+                                               @RequestHeader Map<String, String> res) throws Exception{
+        String jwt = res.get("jwt");
+        if (jwt == null || !jwtService.checkJwt(jwt)) {
+            return null;
+        }
+        User user = jwtService.getUserByJwt(jwt);
+        if(user==null || userIdx!=user.getId())
+            return null;
+
         return userService.getUserParticipatePosts(userIdx);
     }
 
