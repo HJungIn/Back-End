@@ -76,4 +76,16 @@ public class UserService {
         List<Post> posts = user.getParticipatePosts().stream().map(UserPost::getPost).collect(Collectors.toList());
         return posts.stream().map(PostDto::convert).collect(Collectors.toList());
     }
+
+    public boolean checkForLogin(Map<String, String> param) {
+
+        String userId = param.get("userId");
+        String userPassword = param.get("userPassword");
+
+        User user = getUser(userId);
+        if(user==null || !user.getUserPassword().equals(userPassword))
+            return false;
+
+        return true;
+    }
 }
