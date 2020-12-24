@@ -16,9 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PostController {
 
-    @Autowired
     private final PostService postService;
-    @Autowired
     private final UserService userService;
 
     public User user = new User("a","a@n","a","aa","aa"); //임시용

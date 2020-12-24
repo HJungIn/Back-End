@@ -4,9 +4,11 @@ import com.project.gonggus.domain.post.Post;
 import com.project.gonggus.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserPostService {
     private final UserPostRepository userPostRepository;
     public void saveUserPost(UserPost userPost){userPostRepository.save(userPost);}
