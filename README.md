@@ -1,7 +1,8 @@
 # Back-End
 <br/> 
-<h4>개발 환경 : java, mysql</h4> 
+<h4>개발 환경 : java, mysql, h2</h4> 
 <br/> 
+<h4>Domain</h4>
 <사용자> User<br/> 
 id<br/> 
 이름 name<br/> 
@@ -32,7 +33,9 @@ id<br/>
 <댓글> Comment<br/> 
 id<br/> 
 작성자 writer<br/> 
-내용 content<br/> 
+내용 content<br/>
+isEdit<br>
+createdDate<br>
 <br/> 
 <사용자와 게시판> UserPost<br/> 
 id<br/> 
@@ -40,10 +43,11 @@ user<br/>
 post<br/> 
 <br/> 
 <br/> 
-<h4>역할분담</h4>
-(로그인,)회원가입, 마이페이지, 프로필 수정하기<br/> 
-메인 페이지, 카테고리별 게시글리스트, 게시글 검색, 게시글 작성하기, 게시글 수정하기, 상세 게시글( 참여하기 후 게시글(댓글나오도록 하기) ), 북마크 등록&삭제, 게시글 참여&탈퇴 <br>
-북마크 게시글 보기, 참여한 게시글&본인이 만든 게시글 보기<br/> 
+<h4>해야 할 것</h4>
+로그인, 회원가입, 마이페이지, 프로필 수정하기, 북마크 게시글 보기, 참여한 게시글&본인이 만든 게시글 보기<br/> 
+메인 페이지, 카테고리별 게시글리스트, 게시글 검색<br>
+게시글 작성하기, 게시글 수정하기, 상세 게시글( 댓글 포함 ), 북마크 등록&삭제, 게시글 참여&탈퇴, 게시글 삭제하기 <br>
+<br/> 
 <br>
 <br/> 
 
@@ -136,7 +140,33 @@ post<br/>
 <br>
 * 게시글에서 삭제하기 : /post/{postId}/deletepost<br>
  - 백엔드가 받는 데이터 : postId (Long)<br>
-    <br>
-  
+<br>
+<br>
+=== 유저에 관한 path ===
+<br>
+* 회원가입 : /signupuser<br>
+ - 백엔드가 받는 데이터 : name (String)<br>
+                         userId (String)<br>
+                         userPassword (String)<br>
+                         nickname (String)<br>
+                         scoolName (String)<br>
+<br>
+* 마이페이지 : /user/{id}/mypage<br>
+ - 백엔드가 받는 데이터 : id (Long) => id는 user의 id (userId 아님)<br>
+<br>
+* 나의 정보 수정하기 : /user/{id}/editmyinfo<br>
+ - 백엔드가 받는 데이터 : id (Long) => id는 user의 id (userId 아님)   <br>                   
+<br>
+* 내가 추가한 북마크 게시글 : /user/{id}/mybookmarkposts<br>
+ - 백엔드가 받는 데이터 : id (Long) => id는 user의 id (userId 아님) <br>
+<br>
+* 내가 참여한 게시글 : /user/{id}/myparticipateposts<br>
+ - 백엔드가 받는 데이터 : id (Long) => id는 user의 id (userId 아님) <br>
+<br>
+* 로그인 : /signinuser<br>
+ - 백엔드가 받는 데이터 : userId (String),<br>
+                         userPassword (String)<br>
+<br>
+
 </pre>
 <br>
