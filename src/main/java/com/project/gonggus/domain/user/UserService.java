@@ -4,6 +4,7 @@ import com.project.gonggus.domain.post.Post;
 import com.project.gonggus.domain.post.PostDto;
 import com.project.gonggus.domain.post.PostRepository;
 import com.project.gonggus.domain.post.PostService;
+import com.project.gonggus.domain.userpost.UserPost;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,5 +69,11 @@ public class UserService {
         User user = getUserByIndex(userIdx);
         List<Post> usersBookmarkPosts = postRepository.findUsersBookmarkPosts(user.getBookmarkPosts());
         return usersBookmarkPosts.stream().map(PostDto::convert).collect(Collectors.toList());
+    }
+
+    public List<PostDto> getUserParticipatePosts(Long userIdx) {
+        User user = getUserByIndex(userIdx);
+        List<Post> posts = user.getParticipatePosts().stream().map(UserPost::getPost).collect(Collectors.toList());
+        return posts.stream().map(PostDto::convert).collect(Collectors.toList());
     }
 }

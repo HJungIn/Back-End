@@ -29,4 +29,9 @@ public class UserController {
     public List<PostDto> usersBookmarkPosts(@PathVariable("id") Long userIdx){
         return userService.getUsersBookmarkPosts(userIdx);
     }
+
+    @GetMapping("/user/{id}/myparticipateposts")
+    public List<PostDto> usersParticipatePosts(@PathVariable("id") Long userIdx){
+        return userService.getUserParticipatePosts(userIdx);
+    }
 }
