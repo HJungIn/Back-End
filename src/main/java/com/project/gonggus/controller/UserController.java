@@ -70,7 +70,7 @@ public class UserController {
     public List<PostDto> usersParticipatePosts(@PathVariable("id") Long userIdx,
                                                @RequestHeader Map<String, String> res) throws Exception{
         String jwt = res.get("jwt");
-        if (jwt == null || !jwtService.checkJwt(jwt)) {
+        if (jwt == null || jwt.equals("") || !jwtService.checkJwt(jwt)) {
             return null;
         }
         User user = jwtService.getUserByJwt(jwt);
