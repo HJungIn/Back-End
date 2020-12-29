@@ -80,7 +80,7 @@ public class UserService {
     // 유저 정보 수정
     public Map<String, Object> updateProfile(String token, String name, String nickname) {
         String userId = jwtService.get(token)
-                .get("userid")
+                .get("userId")
                 .toString();
         User user = userRepository.findByUserId(userId);
         user.setName(name);
@@ -145,7 +145,7 @@ public class UserService {
 
     public User getUserByCookie(String cookie) {
         String userId = jwtService.getByCookie(cookie)
-                .get("userid")
+                .get("userId")
                 .toString();
         return getUser(userId);
     }
