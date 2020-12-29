@@ -71,7 +71,7 @@ public class UserService {
         Map<String, Object> resultMap = new HashMap<>();
         User user = getUser(
                 jwtService.get(token)
-                        .get("userId")
+                        .get("userid")
                         .toString()
         );
         return createResultMap(user, token);
