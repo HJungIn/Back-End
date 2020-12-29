@@ -81,12 +81,14 @@ post<br/>
 * 게시글 작성하기 : /makepost<br>
 <br>
 * 게시글 작성 완료후 : /makepostsubmit<br>
-  -- 백엔드가 받는 데이터 :  @RequestParam("title") String title,<br>
-                           @RequestParam("content") String content,<br>
-                           @RequestParam("category") String category,<br>
-                           @RequestParam("goodsLink") String goodsLink,<br>
-                           @RequestParam("limitNumberOfPeople") Long limitNumberOfPeople,<br>
-                           @RequestParam("deadline") String deadline<br>
+  -- 백엔드가 받는 데이터 : @RequestBody Map<String, String> param<br>
+                           (title,<br>
+                            content,<br>
+                            category,<br>
+                            goodsLink,<br>
+                            limitNumberOfPeople,<br>
+                            deadline)<br>
+                           @RequestHeader Map< String, String> res<br>
 <br><br>
 * 게시글 수정하기 : /post/{postId}/update<br>
   -- 백엔드에게 받는 데이터 : postId (Long)<br>
@@ -94,12 +96,14 @@ post<br/>
 <br>
 * 게시글 수정하기 완료후 : /updatepostsubmit/{postId}<br>
   -- 백엔드가 받는 데이터 :  @PathVariable("postId") Long postId<br>
-                           @RequestParam("title") String title,<br>
-                           @RequestParam("content") String content,<br>
-                           @RequestParam("category") String category,<br>
-                           @RequestParam("goodsLink") String goodsLink,<br>
-                           @RequestParam("limitNumberOfPeople") Long limitNumberOfPeople,<br>
-                           @RequestParam("deadline") String deadline<br>
+                            @RequestBody Map<String, String> param<br>
+                            (title,<br>
+                             content,<br>
+                             category,<br>
+                             goodsLink,<br>
+                             limitNumberOfPeople,<br>
+                             deadline)<br>
+                            @RequestHeader Map< String, String> res<br>
 <br>
 <br>
 * 상세 게시글 (참여하기 후 게시글(댓글나오도록 하기)) : /post/{postId}<br>
@@ -110,7 +114,9 @@ post<br/>
   == 댓글 ==<br>
 * 댓글 쓰기 : /post/{postId}/writecommentsubmit<br>
  - 백엔드가 받는 데이터 : postId (Long),<br>
-		       content (String)<br>
+		       content (String),<br>
+		       @RequestHeader Map< String, String> res<br>
+ - 프론트에게 주는 데이터 : comment (Comment)<br>
 <br>
 * 댓글 수정하기 : /post/{postId}/updatecomment/{commentId}<br>
  - 백엔드가 받는 데이터 : postId (Long),<br>
@@ -120,26 +126,33 @@ post<br/>
 * 댓글 수정하기 완료후 : /post/{postId}/updatecommentsubmit/{commentId}<br>
  - 백엔드가 받는 데이터 : postId (Long),<br>
 		       commentId (Long),<br>
-		       content (String)<br>
+		       content (String),<br>
+		       @RequestHeader Map< String, String> res<br>
 * 댓글 삭제하기 : /post/{postId}/deletecomment/{commentId}<br>
  - 백엔드가 받는 데이터 : postId (Long),<br>
-		       commentId (Long)<br>
+		       commentId (Long),<br>
+		       @RequestHeader Map< String, String> res<br>
 <br>
 ===북마크 & 참여하기 +둘 다 삭제하기===<br>
 * 북마크 등록하기 : /post/{postId}/registerbookmark<br>
- - 백엔드가 받는 데이터 : postId (Long)<br>
+ - 백엔드가 받는 데이터 : postId (Long),<br>
+                         @RequestHeader Map< String, String> res<br>
 <br>
 * 북마크 삭제하기 : /post/{postId}/deletebookmark<br>
- - 백엔드가 받는 데이터 : postId (Long)<br>
+ - 백엔드가 받는 데이터 : postId (Long),<br>
+                         @RequestHeader Map< String, String> res<br>
 <br>
 * 게시글에 참여하기 : /post/{postId}/participatepost<br>
- - 백엔드가 받는 데이터 : postId (Long)<br>
+ - 백엔드가 받는 데이터 : postId (Long),<br>
+                         @RequestHeader Map< String, String> res<br>
 <br>
 * 게시글에서 탈퇴하기 : /post/{postId}/withdrawpost<br>
- - 백엔드가 받는 데이터 : postId (Long)<br>
+ - 백엔드가 받는 데이터 : postId (Long),<br>
+                         @RequestHeader Map< String, String> res<br>
 <br>
 * 게시글에서 삭제하기 : /post/{postId}/deletepost<br>
- - 백엔드가 받는 데이터 : postId (Long)<br>
+ - 백엔드가 받는 데이터 : postId (Long),<br>
+                         @RequestHeader Map< String, String> res<br>
 <br>
 <br>
 === 유저에 관한 path ===
@@ -152,16 +165,20 @@ post<br/>
                          scoolName (String)<br>
 <br>
 * 마이페이지 : /user/{id}/mypage<br>
- - 백엔드가 받는 데이터 : id (Long) => id는 user의 id (userId 아님)<br>
+ - 백엔드가 받는 데이터 : id (Long) => id는 user의 id (userId 아님),<br>
+                         @RequestHeader Map< String, String> res<br>
 <br>
 * 나의 정보 수정하기 : /user/{id}/editmyinfo<br>
- - 백엔드가 받는 데이터 : id (Long) => id는 user의 id (userId 아님)   <br>                   
+ - 백엔드가 받는 데이터 : id (Long) => id는 user의 id (userId 아님),   <br>
+                         @RequestHeader Map< String, String> res<br>                   
 <br>
 * 내가 추가한 북마크 게시글 : /user/{id}/mybookmarkposts<br>
- - 백엔드가 받는 데이터 : id (Long) => id는 user의 id (userId 아님) <br>
+ - 백엔드가 받는 데이터 : id (Long) => id는 user의 id (userId 아님), <br>
+                         @RequestHeader Map< String, String> res<br>
 <br>
 * 내가 참여한 게시글 : /user/{id}/myparticipateposts<br>
- - 백엔드가 받는 데이터 : id (Long) => id는 user의 id (userId 아님) <br>
+ - 백엔드가 받는 데이터 : id (Long) => id는 user의 id (userId 아님), <br>
+                         @RequestHeader Map< String, String> res<br>
 <br>
 * 로그인 : /signinuser<br>
  - 백엔드가 받는 데이터 : userId (String),<br>
