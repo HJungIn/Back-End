@@ -50,8 +50,11 @@ public class PostService {
             SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
             Date deadline_date = fm.parse(deadline);
             Post post = new Post(user, title, content, category, goodsLink, Long.valueOf(1),Long.valueOf(limitNumberOfPeople), deadline_date, false);
+            UserPost userPost = new UserPost(user, post);
             postRepository.save(post);
-            userPostService.saveUserPost(new UserPost(user, post));
+            userPostService.saveUserPost(userPost);
+            user.getOwnPosts().add(post);
+            user.getParticipatePosts().add(userPost);
 
         } catch (Exception e){
             System.out.println(e.toString());
@@ -114,6 +117,7 @@ public class PostService {
         if(post.getCurrentNumberOfPeople() == post.getLimitNumberOfPeople()){
             post.setFinishCheck(true);
         }
+        user.getParticipatePosts().add(userPost);
     }
 
     public void withdrawPost(String userId, Long postId) {
@@ -129,6 +133,7 @@ public class PostService {
         userPostService.deleteUserPost(userPost);
         post.setCurrentNumberOfPeople(post.getCurrentNumberOfPeople()-1);
         post.setFinishCheck(false);
+        user.getParticipatePosts().remove(userPost);
     }
 
     public void deletePost(String userId, Long postId) {
@@ -142,6 +147,8 @@ public class PostService {
             if(post.getCurrentNumberOfPeople()!=1)
                 return;
             postRepository.delete(post);
+            user.getOwnPosts().remove(post);
+            user.getParticipatePosts().remove(userPostService.getUserPost(user, post));
             return;
         }
 
