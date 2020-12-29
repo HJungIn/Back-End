@@ -1,5 +1,6 @@
 package com.project.gonggus.domain.user;
 
+import com.project.gonggus.domain.post.Post;
 import com.project.gonggus.domain.userpost.UserPost;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +21,7 @@ public class UserDto {
     private String schoolName;
     private List<Long> bookmarkPosts;
     private List<Long> participatePosts;
+    private List<Long> ownPosts;
 
     public static UserDto convert(User user){
         return UserDto.builder()
@@ -30,6 +32,7 @@ public class UserDto {
                 .schoolName(user.getSchoolName())
                 .bookmarkPosts(user.getBookmarkPosts())
                 .participatePosts(user.getParticipatePosts().stream().map(UserPost::getId).collect(Collectors.toList()))
+                .ownPosts(user.getOwnPosts().stream().map(Post::getId).collect(Collectors.toList()))
                 .build();
     }
 
