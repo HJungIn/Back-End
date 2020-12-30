@@ -28,10 +28,14 @@ public class UserDto {
 
     public static UserDto convert(User user){
         List<Long> participate = new ArrayList<>();
-        user.getParticipatePosts().stream().map(post -> participate.add(post.getId()));
-
+        List<Long> participate = new ArrayList<>();
+        for(UserPost up: user.getParticipatePosts()) {
+            participate.add(up.getPost().getId());
+        }
         List<Long> own = new ArrayList<>();
-        user.getOwnPosts().stream().map(post -> own.add(post.getId()));
+        for(Post up: user.getOwnPosts()) {
+            own.add(up.getId());
+        }
 
         return UserDto.builder()
                 .id(user.getId())
