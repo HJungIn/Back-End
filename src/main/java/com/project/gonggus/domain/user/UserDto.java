@@ -28,7 +28,6 @@ public class UserDto {
 
     public static UserDto convert(User user){
         List<Long> participate = new ArrayList<>();
-        List<Long> participate = new ArrayList<>();
         for(UserPost up: user.getParticipatePosts()) {
             participate.add(up.getPost().getId());
         }
