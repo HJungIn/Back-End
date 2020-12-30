@@ -31,7 +31,7 @@ public class UserDto {
                 .nickname(user.getNickname())
                 .schoolName(user.getSchoolName())
                 .bookmarkPosts(user.getBookmarkPosts())
-                .participatePosts(user.getParticipatePosts().stream().map(UserPost::getId).collect(Collectors.toList()))
+                .participatePosts(user.getParticipatePosts().stream().map(UserPost::getPost).map(Post::getId).collect(Collectors.toList()))
                 .ownPosts(user.getOwnPosts().stream().map(Post::getId).collect(Collectors.toList()))
                 .build();
     }
