@@ -84,9 +84,7 @@ public class UserContoller {
             resultMap = userService.check(token);
             status = HttpStatus.ACCEPTED;
         } catch (RuntimeException e) {
-            resultMap.put("message", e.getMessage());
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e);
+            return null;
         }
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
