@@ -1,7 +1,7 @@
 package com.project.gonggus.domain.post;
 
 import com.project.gonggus.domain.user.User;
-import com.project.gonggus.domain.user.UserService;
+import com.project.gonggus.domain.user.UserRepository;
 import com.project.gonggus.domain.userpost.UserPost;
 import com.project.gonggus.domain.userpost.UserPostService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class PostService {
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final UserPostService userPostService;
     private final PostRepository postRepository;
 
@@ -45,7 +44,7 @@ public class PostService {
 
     public void savePost(String userId, String title, String content, String category, String goodsLink, String limitNumberOfPeople, String deadline) {
         try {
-            User user = userService.getUser(userId);
+            User user = userRepository.findByUserId(userId);
 
             SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
             Date deadline_date = fm.parse(deadline);
@@ -83,7 +82,7 @@ public class PostService {
     public Post getPost(Long postId){ return postRepository.findById(postId).orElse(null);}
 
     public void registerBookmark(String userId, Long postId) {
-        User user = userService.getUser(userId);
+        User user = userRepository.findByUserId(userId);
         ArrayList<Long> list = user.getBookmarkPosts();
         if(list==null){
             list = new ArrayList<>();
@@ -94,12 +93,12 @@ public class PostService {
     }
 
     public void deleteBookmark(String userId, Long postId) {
-        User user = userService.getUser(userId);
+        User user = userRepository.findByUserId(userId);
         user.getBookmarkPosts().remove(new Long(postId));
     }
 
     public void participatePost(String userId, Long postId) {
-        User user = userService.getUser(userId);
+        User user = userRepository.findByUserId(userId);
         Post post = postRepository.findById(postId).orElse(null);
         if(user==null || post==null) return;
 
@@ -117,7 +116,7 @@ public class PostService {
     }
 
     public void withdrawPost(String userId, Long postId) {
-        User user = userService.getUser(userId);
+        User user = userRepository.findByUserId(userId);
         Post post = postRepository.findById(postId).orElse(null);
         if(user==null || post==null) return;
 
@@ -132,8 +131,7 @@ public class PostService {
     }
 
     public void deletePost(String userId, Long postId) {
-
-        User user = userService.getUser(userId);
+        User user = userRepository.findByUserId(userId);
         Post post = getPost(postId);
         if(user == null || post==null)
             return;
@@ -148,7 +146,6 @@ public class PostService {
     }
 
     public void checkDateForFinishCheck(Post post){
-
         String current_str = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -164,7 +161,5 @@ public class PostService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-
     }
 }

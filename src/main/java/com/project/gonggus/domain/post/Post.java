@@ -18,7 +18,6 @@ import java.util.List;
 @Getter @Setter
 @NoArgsConstructor
 public class Post extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -63,7 +62,7 @@ public class Post extends BaseTimeEntity {
         this.setOwner(owner);
     }
 
-    public void  setOwner(User owner){
+    public void setOwner(User owner){
         this.owner = owner;
         owner.getOwnPosts().add(this);
     }
