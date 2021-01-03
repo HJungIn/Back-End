@@ -1,123 +1,164 @@
 package com.project.gonggus.controller;
 
+import com.project.gonggus.domain.post.PostService;
 import com.project.gonggus.domain.user.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class UserContoller {
+
     @Autowired
     UserService userService;
 
-    private final int EXPIRE_DAY = 3;
+    @Autowired
+    AuthService authService;
+
+    @Autowired
+    PostService postService;
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> loginExec(
-            @RequestBody Map<String, Object> body, HttpServletResponse res
-    ){
-        Map<String, Object> resultMap = null;
-        HttpStatus status = null;
+    public ResponseEntity<?> signIn (
+            @RequestBody Map<String, Object> body, HttpServletResponse res) {
+        Map<String, Object> resultMap = new HashMap<>();
 
         String userId = body.get("userId").toString();
         String userPassword = body.get("userPassword").toString();
 
-        try {
-            // token과 userData 정보를 프론트에 넘겨줌
-            // 생성된 토큰을 Cookie에 저장하고 HttpOnly 설정
-            resultMap = userService.login(userId, userPassword);
-            res.addCookie(userService.setAuthCookie(resultMap.get("token").toString(), EXPIRE_DAY));
-            // HTTP 상태 202 발신
-            status = HttpStatus.ACCEPTED;
-        } catch (RuntimeException e) {
-            // 오류 메세지 출력 후 HTTP 상태 500 발신
-            resultMap.put("message", e.getMessage());
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e);
-        }
+        Optional<User> user = userService.getUserByUserId(userId);
+        if(user.isPresent()) {
+            User u = user.get();
+            if(!authService.encryptString(userPassword).equals(u.getUserPassword())) {
+                return ResponseEntity.badRequest().build();
+            }
+            resultMap.put("userData", UserDto.convert(u));
 
-        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+            String token = authService.create(u);
+
+            res.addCookie(authService.setAuthCookie(token));
+            resultMap.put("token", token);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(resultMap);
     }
 
     @PostMapping("/logout")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> logoutExec(HttpServletResponse res){
-        Map<String, Object> resultMap = new HashMap<>();
-        HttpStatus status = HttpStatus.NO_CONTENT;
+    public ResponseEntity<?> signOut(HttpServletResponse res){
         // JWT 토큰과 같은 이름의 토큰을 만료된 시간으로 설정하여 저장.
-        res.addCookie(userService.setAuthCookie(null, 0));
-
-        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+        res.addCookie(authService.removeCookie());
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/register")
-    public void registerExec(@RequestBody Map<String, Object> body) {
-        userService.register(body);
-    }
+    public ResponseEntity<?> register(@RequestBody Map<String, Object> body) {
+        String name = body.get("name").toString();
+        String userId = body.get("userId").toString();
+        String userPassword = body.get("userPassword").toString();
+        String nickname = body.get("nickname").toString();
+        String schoolName = body.get("schoolName").toString();
 
-    @PostMapping("/checklogin")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> checkLoginExec(HttpServletRequest res){
-        Map<String, Object> resultMap = null;
-        HttpStatus status = null;
-        String token = null;
-        try {
-            Optional<Cookie> cookie = Arrays.stream(res.getCookies())
-                    .filter(c -> c.getName().equals("auth_token"))
-                    .findAny();
-            if(cookie.isPresent()){
-                token = cookie.get().getValue();
-            }
-            resultMap = userService.check(token);
-            status = HttpStatus.ACCEPTED;
-        } catch (RuntimeException e) {
-            resultMap.put("message", e.getMessage());
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e);
+        if (userService.getUserByUserId(userId).isPresent()){
+            return ResponseEntity.badRequest().build();
+        } else {
+            userService.join(new User(name, userId, userPassword, nickname, schoolName));
+            return ResponseEntity.ok().build();
         }
-
-        return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
-    @PutMapping("/mypage/modify")
+    @PostMapping("/check")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> updateUserProfile(HttpServletRequest res,
-                                                                 @RequestBody Map<String, Object> body){
-        Map<String, Object> resultMap = null;
-        HttpStatus status = null;
+    public ResponseEntity<?> check(HttpServletRequest res){
+        Map<String, Object> resultMap = new HashMap<>();
+
+        for (Cookie c : res.getCookies()) {
+            if (c.getName().equals("access_token")) {
+                String token = c.getValue();
+                Map<String, Object> authResponse = authService.get(token);
+
+                String userId = authResponse.get("userId").toString();
+                Optional<User> user = userService.getUserByUserId(userId);
+                if(user.isPresent()) {
+                    User u = user.get();
+                    resultMap.put("userData", UserDto.convert(u));
+                    resultMap.put("token", token);
+                } else {
+                    return ResponseEntity.badRequest().build();
+                }
+
+                return ResponseEntity.ok(resultMap);
+            }
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PutMapping("/mypage/update")
+    @ResponseBody
+    public ResponseEntity<?> update(HttpServletRequest res, @RequestBody Map<String, Object> body){
+        Map<String, Object> resultMap = new HashMap<>();
 
         String name = body.get("name").toString();
         String nickname = body.get("nickname").toString();
 
-        String token = null;
-        try {
-            Optional<Cookie> cookie = Arrays.stream(res.getCookies())
-                    .filter(c -> c.getName().equals("auth_token"))
-                    .findAny();
-            if (cookie.isPresent()) {
-                token = cookie.get().getValue();
-            }
-            resultMap = userService.updateProfile(token, name, nickname);
-            status = HttpStatus.ACCEPTED;
-        } catch (RuntimeException e) {
-            resultMap.put("message", e.getMessage());
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            System.out.println(e);
-        }
+        for (Cookie c : res.getCookies()) {
+            if (c.getName().equals("access_token")) {
+                String token = c.getValue();
+                Map<String, Object> authResponse = authService.get(token);
 
-        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+                String userId = authResponse.get("userId").toString();
+                Optional<User> user = userService.getUserByUserId(userId);
+                if(user.isPresent()) {
+                    User u = user.get();
+                    u.setName(name);
+                    u.setNickname(nickname);
+                    userService.save(u);
+                    resultMap.put("userData", UserDto.convert(u));
+                    resultMap.put("token", token);
+                } else {
+                    return ResponseEntity.badRequest().build();
+                }
+
+                return ResponseEntity.ok(resultMap);
+            }
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PostMapping("/mypage/bookmark")
+    @ResponseBody
+    public ResponseEntity<?> bookmark(HttpServletRequest res,
+                                                      @RequestBody Map<String, Object> body) {
+        Map<String, Object> resultMap = new HashMap<>();
+        User user = userService.getUserByCookie(authService.findAuthCookie(res.getCookies()));
+        if (!user.getBookmarkPosts().isEmpty()) {
+            for (Long id : user.getBookmarkPosts()) {
+                resultMap.put(id.toString(), postService.getPostDto(id));
+            }
+        }
+        return ResponseEntity.ok(resultMap);
+    }
+
+    @PostMapping("/mypage/participate")
+    @ResponseBody
+    public ResponseEntity<?> participate(HttpServletRequest res,
+                                      @RequestBody Map<String, Object> body) {
+        Map<String, Object> resultMap = new HashMap<>();
+        User user = userService.getUserByCookie(authService.findAuthCookie(res.getCookies()));
+        if (!user.getBookmarkPosts().isEmpty()) {
+            for (Long id : user.getBookmarkPosts()) {
+                resultMap.put(id.toString(), postService.getPostDto(id));
+            }
+        }
+        return ResponseEntity.ok(resultMap);
     }
 }
