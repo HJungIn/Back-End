@@ -1,14 +1,11 @@
 package com.project.gonggus.domain.user;
 
-import com.project.gonggus.domain.comment.Comment;
 import com.project.gonggus.domain.post.Post;
 import com.project.gonggus.domain.userpost.UserPost;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 

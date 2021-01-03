@@ -3,7 +3,7 @@ package com.project.gonggus.domain.comment;
 import com.project.gonggus.domain.post.Post;
 import com.project.gonggus.domain.post.PostService;
 import com.project.gonggus.domain.user.User;
-import com.project.gonggus.domain.user.UserService;
+import com.project.gonggus.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final PostService postService;
 
     public Long saveComment(String userId, Long postId, String content, Boolean isEdit, String createdDate) {
 
-        User user = userService.getUser(userId);
+        User user = userRepository.findByUserId(userId);
         Post post = postService.getPost(postId);
         if(post == null){
             return Long.valueOf(0);
@@ -37,7 +37,7 @@ public class CommentService {
     }
 
     public void updateComment(String userId, Long postId, Long commentId, String content) {
-        User user = userService.getUser(userId);
+        User user = userRepository.findByUserId(userId);
         Post post = postService.getPost(postId);
         Comment comment = commentRepository.findById(commentId).orElse(null);
         if(user==null || post == null || comment==null){
@@ -48,7 +48,7 @@ public class CommentService {
 
 
     public void deleteComment(String userId, Long commentId) {
-        User user = userService.getUser(userId);
+        User user = userRepository.findByUserId(userId);
         Comment comment = commentRepository.findById(commentId).orElse(null);
         if(user != comment.getWriter())
             return;
