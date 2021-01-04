@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: real-db
+    include: real-db
 
   jpa:
     properties:
