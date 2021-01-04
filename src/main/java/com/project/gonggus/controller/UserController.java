@@ -6,8 +6,11 @@ import com.project.gonggus.domain.user.User;
 import com.project.gonggus.domain.user.UserDto;
 import com.project.gonggus.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,12 +83,26 @@ public class UserController {
         return userService.getUserParticipatePosts(userIdx);
     }
 
+//    @PostMapping("/signinuser")
+//    public String signInUser(@RequestBody Map<String, String> param) throws Exception{
+//
+//        if(!userService.checkForLogin(param))
+//            return "아이디가 없거나, 비밀번호가 맞지 않습니다.";
+//
+//        return jwtService.makeJwt(param);
+//    }
+
     @PostMapping("/signinuser")
-    public String signInUser(@RequestBody Map<String, String> param) throws Exception{
+    public ResponseEntity<Map<String, Object>> signInUser(@RequestBody Map<String, String> param) throws Exception{
 
         if(!userService.checkForLogin(param))
-            return "아이디가 없거나, 비밀번호가 맞지 않습니다.";
+            return null;
 
-        return jwtService.makeJwt(param);
+        Map<String, Object> map = new HashMap<>();
+        map.put("userData", UserDto.convert(userService.getUser(param.get("userId"))));
+        map.put("jwt", jwtService.makeJwt(param));
+
+        return new ResponseEntity<Map<String, Object>>(map, HttpStatus.ACCEPTED);
     }
+
 }
