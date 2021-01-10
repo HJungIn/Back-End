@@ -2,6 +2,7 @@ package com.project.gonggus.controller;
 
 import com.project.gonggus.domain.post.PostService;
 import com.project.gonggus.domain.user.*;
+import com.project.gonggus.domain.userpost.UserPost;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -134,29 +135,27 @@ public class UserContoller {
         return ResponseEntity.badRequest().build();
     }
 
-    @PostMapping("/mypage/bookmark")
+    @GetMapping("/mypage/bookmark")
     @ResponseBody
-    public ResponseEntity<?> bookmark(HttpServletRequest res,
-                                                      @RequestBody Map<String, Object> body) {
-        Map<String, Object> resultMap = new HashMap<>();
+    public ResponseEntity<?> bookmark(HttpServletRequest res) {
+        Map<Long, Object> resultMap = new HashMap<>();
         User user = userService.getUserByCookie(authService.findAuthCookie(res.getCookies()));
         if (!user.getBookmarkPosts().isEmpty()) {
             for (Long id : user.getBookmarkPosts()) {
-                resultMap.put(id.toString(), postService.getPostDto(id));
+                resultMap.put(id, postService.getPostDto(id));
             }
         }
         return ResponseEntity.ok(resultMap);
     }
 
-    @PostMapping("/mypage/participate")
+    @GetMapping("/mypage/participate")
     @ResponseBody
-    public ResponseEntity<?> participate(HttpServletRequest res,
-                                      @RequestBody Map<String, Object> body) {
-        Map<String, Object> resultMap = new HashMap<>();
+    public ResponseEntity<?> participate(HttpServletRequest res) {
+        Map<Long, Object> resultMap = new HashMap<>();
         User user = userService.getUserByCookie(authService.findAuthCookie(res.getCookies()));
-        if (!user.getBookmarkPosts().isEmpty()) {
-            for (Long id : user.getBookmarkPosts()) {
-                resultMap.put(id.toString(), postService.getPostDto(id));
+        if (!user.getParticipatePosts().isEmpty()) {
+            for (UserPost post : user.getParticipatePosts()) {
+                resultMap.put(post.getId(), postService.getPostDto(post.getId()));
             }
         }
         return ResponseEntity.ok(resultMap);
