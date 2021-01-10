@@ -52,6 +52,14 @@ post<br/>
 <h3>path 경로 설정</h3>
 <p>
 메인 페이지 :  / <br/> 
+로그인 페이지: /login <br/> 
+회원가입 페이지: /register <br/>
+로그아웃: /logout <br/>
+로그인 여부 체크: /check <br/>
+마이페이지: /mypage <br/>
+마이페이지 회원정보 업데이트: /mypage/update <br/> 
+마이페이지 북마크 리스트: /mypage/bookmark <br/>
+마이페이지 참여 글 리스트: /mypage/participate <br/>
 카테고리별 게시글리스트 :  /{category} <br/> 
 게시글 검색 :  /searchpost?search=검색어 <br/> 
 게시글 작성하기 :  /makepost  ,  완료후  :  /makepostsubmit <br/> 
@@ -65,6 +73,7 @@ post<br/>
 <br>
 * 메인 페이지 : /<br>
 <br>
+* 카테고리별 게시글리스트 :  /{category} <br/> 
 * 카테고리별 게시글리스트 : /{category} <br>
   -- 백엔드가 받는 데이터 : category (String) <br>
   -- 프론트에게 주는 데이터 : categoryPosts (List<Post>)<br>
